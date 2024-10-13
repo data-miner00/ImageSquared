@@ -7,9 +7,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Open"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Edit"></MenuItem>
+            <MenuItem Header="View"></MenuItem>
+            <MenuItem Header="Window"></MenuItem>
+            <MenuItem Header="Help"></MenuItem>
+        </Menu>
         <Button Content="Select Image"
                 HorizontalAlignment="Left"
-                Margin="10,10,0,0"
+                Margin="10,31,0,0"
                 VerticalAlignment="Top"
                 Click="Button_Click"
                 RenderTransformOrigin="1.194,0.719">
@@ -38,7 +47,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Image x:Name="SelectedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,56,0,0" Width="389" Height="230"/>
-        <Image x:Name="TransformedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="494,35,0,0" Width="240" Height="240"/>
+        <Image x:Name="SelectedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,80,0,0" Width="389" Height="230"/>
+        <Image x:Name="TransformedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="494,80,0,0" Width="240" Height="240"/>
     </Grid>
 </Window>
