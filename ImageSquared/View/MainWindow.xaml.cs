@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using ImageSquared.Core;
+using ImageSquared.Option;
+using Microsoft.Win32;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,18 +22,25 @@ namespace ImageSquared.View
         private static readonly Brush BlackBrush = new SolidColorBrush(Colors.Black);
         private static readonly Pen Pen = new Pen(Brushes.Blue, 5); // Blue pen with 5px thickness
 
-        private readonly int similarityPercentageThreshold = 10;
+        private readonly int similarityPercentageThreshold;
         private readonly int dpiX = 96;
         private readonly int dpiY = 96;
-        private readonly bool debug = false;
+        private readonly bool debug;
+        private readonly string filter;
 
         static MainWindow()
         {
-            Pen.DashStyle = DashStyles.Dash; 
+            Pen.DashStyle = DashStyles.Dash;
         }
 
-        public MainWindow()
+        public MainWindow(DefaultSettings settings)
         {
+            Guard.ThrowIfNull(settings);
+
+            this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
+            this.debug = settings.Debug;
+            this.filter = settings.OpenFileDialogFilter;
+
             InitializeComponent();
         }
 
@@ -39,7 +48,7 @@ namespace ImageSquared.View
         {
             var openFileDialog = new OpenFileDialog
             {
-                Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png"
+                Filter = this.filter,
             };
 
             if (openFileDialog.ShowDialog() == true)

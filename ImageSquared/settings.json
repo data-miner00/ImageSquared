@@ -1,0 +1,7 @@
+﻿{
+  "DefaultSettings": {
+    "similarityPercentageThreshold": 90,
+    "openFileDialogFilter": "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png",
+    "debug": false
+  }
+}
