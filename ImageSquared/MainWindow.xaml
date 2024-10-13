@@ -7,6 +7,38 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Button Content="Select Image"
+                HorizontalAlignment="Left"
+                Margin="10,10,0,0"
+                VerticalAlignment="Top"
+                Click="Button_Click"
+                RenderTransformOrigin="1.194,0.719">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="Beige"/>
+                    <Setter Property="Cursor" Value="Hand"/>
 
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Bisque"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="100"
+                            Height="25"
+                            CornerRadius="12"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Image x:Name="SelectedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,56,0,0" Width="389" Height="230"/>
+        <Image x:Name="TransformedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="494,35,0,0" Width="240" Height="240"/>
     </Grid>
 </Window>
