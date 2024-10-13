@@ -2,6 +2,7 @@
 using System.Data;
 using System.Windows;
 using Autofac;
+using ImageSquared.View;
 
 namespace ImageSquared
 {
