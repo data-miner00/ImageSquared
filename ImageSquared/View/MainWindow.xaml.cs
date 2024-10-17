@@ -28,6 +28,10 @@ namespace ImageSquared.View
         private readonly bool debug;
         private readonly string filter;
 
+        private BitmapImage currentImage;
+        private int currentImageHeight;
+        private int currentImageWidth;
+
         static MainWindow()
         {
             Pen.DashStyle = DashStyles.Dash;
@@ -41,7 +45,9 @@ namespace ImageSquared.View
             this.debug = settings.Debug;
             this.filter = settings.OpenFileDialogFilter;
 
-            InitializeComponent();
+            // var result = MessageBox.Show("Started", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            this.InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -49,6 +55,8 @@ namespace ImageSquared.View
             var openFileDialog = new OpenFileDialog
             {
                 Filter = this.filter,
+                Title = "Select an image file",
+                Multiselect = false,
             };
 
             if (openFileDialog.ShowDialog() == true)
@@ -57,40 +65,47 @@ namespace ImageSquared.View
                 this.SelectedImage.Source = originalImage;
                 originalImage.Freeze();
 
-                var originalHeight = Convert.ToInt32(this.SelectedImage.Height);
-                var originalWidth = Convert.ToInt32(this.SelectedImage.Width);
+                var originalHeight = Convert.ToInt32(originalImage.Height);
+                var originalWidth = Convert.ToInt32(originalImage.Width);
 
-                if (originalHeight == originalWidth)
-                {
-                    return;
-                }
-
-                var imageOrientation = (originalHeight - originalWidth) > 0
-                    ? ImageOrientation.Portrait
-                    : ImageOrientation.Landscape;
-
-                var standardLength = imageOrientation == ImageOrientation.Landscape
-                    ? originalWidth
-                    : originalHeight;
-
-                var extendedImage = new RenderTargetBitmap(standardLength, standardLength, this.dpiX, this.dpiY, PixelFormats.Pbgra32);
-
-                var visual = new DrawingVisual();
-
-                using (var drawingContext = visual.RenderOpen())
-                {
-                    if (this.debug)
-                    {
-                        drawingContext.DrawRectangle(BlackBrush, Pen, new Rect(0, 0, standardLength, standardLength));
-                    }
-
-                    drawingContext.DrawImage(originalImage, new Rect(0, 0, originalWidth, originalHeight));
-                }
-
-                extendedImage.Render(visual);
-
-                this.TransformedImage.Source = extendedImage;
+                this.currentImage = originalImage;
+                this.currentImageHeight = originalHeight;
+                this.currentImageWidth = originalWidth;
             }
+        }
+
+        private void btnConvert_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.currentImageHeight == this.currentImageWidth)
+            {
+                return;
+            }
+
+            var imageOrientation = (this.currentImageHeight - this.currentImageWidth) > 0
+                ? ImageOrientation.Portrait
+                : ImageOrientation.Landscape;
+
+            var standardLength = imageOrientation == ImageOrientation.Landscape
+                ? this.currentImageWidth
+                : this.currentImageHeight;
+
+            var extendedImage = new RenderTargetBitmap(standardLength, standardLength, this.dpiX, this.dpiY, PixelFormats.Pbgra32);
+
+            var visual = new DrawingVisual();
+
+            using (var drawingContext = visual.RenderOpen())
+            {
+                if (this.debug)
+                {
+                    drawingContext.DrawRectangle(BlackBrush, Pen, new Rect(0, 0, standardLength, standardLength));
+                }
+
+                drawingContext.DrawImage(this.currentImage, new Rect(0, 0, this.currentImageWidth, this.currentImageHeight));
+            }
+
+            extendedImage.Render(visual);
+
+            // this.TransformedImage.Source = extendedImage;
         }
     }
 

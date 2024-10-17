@@ -7,41 +7,62 @@
         xmlns:userControl="clr-namespace:ImageSquared.View.UserControl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <userControl:MenuControl />
-        
-        <Button Content="Select Image"
-                HorizontalAlignment="Left"
-                Margin="10,31,0,0"
-                VerticalAlignment="Top"
-                Click="Button_Click"
-                RenderTransformOrigin="1.194,0.719">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="Background" Value="Beige"/>
-                    <Setter Property="Cursor" Value="Hand"/>
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="Bisque"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Border Width="100"
-                            Height="25"
-                            CornerRadius="12"
-                            Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-        <Image x:Name="SelectedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,80,0,0" Width="389" Height="230"/>
-        <Image x:Name="TransformedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="494,80,0,0" Width="240" Height="240"/>
+        <userControl:MenuControl Grid.Row="0" Grid.ColumnSpan="2" />
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <Button Content="Select Image"
+                        HorizontalAlignment="Left"
+                        Margin="30"
+                        VerticalAlignment="Top"
+                        Click="Button_Click"
+                        RenderTransformOrigin="1.194,0.719">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Beige"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Bisque"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100"
+                                    Height="25"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+            <ListView x:Name="lvRecentImages">
+                <ListViewItem>Hello</ListViewItem>
+                <ListViewItem>World</ListViewItem>
+            </ListView>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Image x:Name="SelectedImage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Height="350" Width="580" />
+            <Button x:Name="btnConvert" Margin="10" Click="btnConvert_Click">Convert</Button>
+        </StackPanel>
     </Grid>
 </Window>

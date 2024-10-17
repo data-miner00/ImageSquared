@@ -8,14 +8,14 @@
              d:DesignHeight="20" d:DesignWidth="800">
     <Grid>
         <Menu>
-            <MenuItem Header="File">
-                <MenuItem Header="Open"></MenuItem>
-                <MenuItem Header="Exit"></MenuItem>
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open"></MenuItem>
+                <MenuItem Header="_Exit"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Edit"></MenuItem>
-            <MenuItem Header="View"></MenuItem>
-            <MenuItem Header="Window"></MenuItem>
-            <MenuItem Header="Help"></MenuItem>
+            <MenuItem Header="_Edit"></MenuItem>
+            <MenuItem Header="_View"></MenuItem>
+            <MenuItem Header="_Window"></MenuItem>
+            <MenuItem Header="_Help"></MenuItem>
         </Menu>
     </Grid>
 </UserControl>
