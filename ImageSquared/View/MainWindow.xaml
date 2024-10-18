@@ -54,9 +54,7 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <ListView x:Name="lvRecentImages">
-                <ListViewItem>Hello</ListViewItem>
-                <ListViewItem>World</ListViewItem>
+            <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}">
             </ListView>
         </StackPanel>
 

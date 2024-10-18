@@ -1,6 +1,8 @@
 ﻿using ImageSquared.Core;
 using ImageSquared.Option;
 using Microsoft.Win32;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +21,8 @@ namespace ImageSquared.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string HistoryFileName = "histfile.txt";
+
         private static readonly Brush BlackBrush = new SolidColorBrush(Colors.Black);
         private static readonly Pen Pen = new Pen(Brushes.Blue, 5); // Blue pen with 5px thickness
 
@@ -40,15 +44,19 @@ namespace ImageSquared.View
         public MainWindow(DefaultSettings settings)
         {
             Guard.ThrowIfNull(settings);
+            this.DataContext = this;
 
             this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
             this.debug = settings.Debug;
             this.filter = settings.OpenFileDialogFilter;
 
             // var result = MessageBox.Show("Started", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            this.LoadHistoryFile();
 
             this.InitializeComponent();
         }
+
+        public ObservableCollection<string> FileHistory { get; } = new ObservableCollection<string>();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -71,6 +79,8 @@ namespace ImageSquared.View
                 this.currentImage = originalImage;
                 this.currentImageHeight = originalHeight;
                 this.currentImageWidth = originalWidth;
+
+                this.SaveSelectedFile(openFileDialog.FileName);
             }
         }
 
@@ -106,6 +116,29 @@ namespace ImageSquared.View
             extendedImage.Render(visual);
 
             // this.TransformedImage.Source = extendedImage;
+        }
+
+        private void LoadHistoryFile()
+        {
+            if (!File.Exists(HistoryFileName))
+            {
+                return;
+            }
+
+            var fileName = File.ReadAllLines(HistoryFileName);
+
+            foreach (var line in fileName)
+            {
+                this.FileHistory.Add(line);
+            }
+        }
+
+        private void SaveSelectedFile(string filePath)
+        {
+            this.FileHistory.Add(filePath);
+            using var stream = File.AppendText(HistoryFileName);
+
+            stream.WriteLine(filePath);
         }
     }
 
