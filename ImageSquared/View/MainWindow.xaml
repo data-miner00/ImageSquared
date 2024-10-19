@@ -15,7 +15,7 @@
         <Style TargetType="Button">
             <Setter Property="Background" Value="AntiqueWhite"/>
         </Style>
-        <Style TargetType="Button" x:Key="SaveButton">
+        <Style TargetType="{x:Type Button}" x:Key="SaveButton">
             <Setter Property="Background" Value="CornflowerBlue"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Foreground" Value="White"/>
@@ -58,6 +58,7 @@
                         </Style>
                     </Button.Style>
 
+                    <!-- or using Setter Property="Template" with Setter.Value inside-->
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Width="100"
@@ -71,8 +72,9 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}">
-            </ListView>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}" />
+            </ScrollViewer>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1">
