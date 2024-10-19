@@ -2,6 +2,7 @@
 using ImageSquared.Option;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -13,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using IO = System.IO;
 
 namespace ImageSquared.View
 {
@@ -31,8 +34,10 @@ namespace ImageSquared.View
         private readonly int dpiY = 96;
         private readonly bool debug;
         private readonly string filter;
+        private readonly string storageFolder;
 
         private BitmapImage currentImage;
+        private RenderTargetBitmap transformedBitmapImage;
         private int currentImageHeight;
         private int currentImageWidth;
 
@@ -49,8 +54,8 @@ namespace ImageSquared.View
             this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
             this.debug = settings.Debug;
             this.filter = settings.OpenFileDialogFilter;
+            this.storageFolder = settings.StorageFolderPath;
 
-            // var result = MessageBox.Show("Started", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             this.LoadHistoryFile();
 
             this.InitializeComponent();
@@ -110,12 +115,33 @@ namespace ImageSquared.View
                     drawingContext.DrawRectangle(BlackBrush, Pen, new Rect(0, 0, standardLength, standardLength));
                 }
 
-                drawingContext.DrawImage(this.currentImage, new Rect(0, 0, this.currentImageWidth, this.currentImageHeight));
+                if (imageOrientation == ImageOrientation.Portrait)
+                {
+                    var startingPosition = standardLength / 2 - this.currentImageWidth / 2;
+                    drawingContext.DrawImage(this.currentImage, new Rect(startingPosition, 0, this.currentImageWidth, this.currentImageHeight));
+                }
+                else if (imageOrientation == ImageOrientation.Landscape)
+                {
+                    var startingPosition = standardLength / 2 - this.currentImageHeight / 2;
+                    drawingContext.DrawImage(this.currentImage, new Rect(0, startingPosition, this.currentImageWidth, this.currentImageHeight));
+                }
+                else
+                {
+                    drawingContext.DrawImage(this.currentImage, new Rect(0, 0, this.currentImageWidth, this.currentImageHeight));
+                }
             }
 
             extendedImage.Render(visual);
 
-            // this.TransformedImage.Source = extendedImage;
+            this.transformedBitmapImage = extendedImage;
+
+            this.TransformedImage.Source = extendedImage;
+        }
+
+        private static string GenerateRandomImageName()
+        {
+            var randomName = $"{Guid.NewGuid()}.bmp";
+            return randomName;
         }
 
         private void LoadHistoryFile()
@@ -139,6 +165,38 @@ namespace ImageSquared.View
             using var stream = File.AppendText(HistoryFileName);
 
             stream.WriteLine(filePath);
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.transformedBitmapImage is null)
+            {
+                _ = MessageBox.Show("Please select an image first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var randomName = GenerateRandomImageName();
+            Directory.CreateDirectory(this.storageFolder);
+
+            var fullPath = IO.Path.Combine(this.storageFolder, randomName);
+
+            using (var fileStream = File.Open(fullPath, FileMode.Create))
+            {
+                var encoder = new BmpBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(this.transformedBitmapImage));
+
+                encoder.Save(fileStream);
+            }
+
+            _ = MessageBox.Show("Successfully converted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            var startProcessInfo = new ProcessStartInfo
+            {
+                FileName = fullPath,
+                UseShellExecute = true,
+            };
+
+            Process.Start(startProcessInfo);
         }
     }
 

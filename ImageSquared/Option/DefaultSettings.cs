@@ -15,4 +15,6 @@ public sealed class DefaultSettings
     public string OpenFileDialogFilter { get; set; }
 
     public bool Debug { get; set; }
+
+    public string StorageFolderPath { get; set; }
 }
