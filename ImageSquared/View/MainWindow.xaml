@@ -6,7 +6,11 @@
         xmlns:local="clr-namespace:ImageSquared.View"
         xmlns:userControl="clr-namespace:ImageSquared.View.UserControl"
         mc:Ignorable="d"
+        WindowStyle="None"
         Title="MainWindow" Height="450" Width="1200">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
+    </WindowChrome.WindowChrome>
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
