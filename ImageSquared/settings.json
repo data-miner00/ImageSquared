@@ -1,8 +1,12 @@
 ﻿{
   "DefaultSettings": {
     "similarityPercentageThreshold": 90,
-    "openFileDialogFilter": "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png",
     "debug": false,
     "storageFolderPath": "outputs"
+  },
+  "OpenFileDialogSettings": {
+    "filter": "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png",
+    "title": "Select an image file",
+    "multiselect": false
   }
 }

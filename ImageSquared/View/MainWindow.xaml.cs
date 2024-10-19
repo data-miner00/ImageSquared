@@ -33,8 +33,8 @@ namespace ImageSquared.View
         private readonly int dpiX = 96;
         private readonly int dpiY = 96;
         private readonly bool debug;
-        private readonly string filter;
         private readonly string storageFolder;
+        private readonly OpenFileDialog openFileDialog;
 
         private BitmapImage currentImage;
         private RenderTargetBitmap transformedBitmapImage;
@@ -46,35 +46,28 @@ namespace ImageSquared.View
             Pen.DashStyle = DashStyles.Dash;
         }
 
-        public MainWindow(DefaultSettings settings)
+        public MainWindow(DefaultSettings settings, OpenFileDialog openFileDialog)
         {
             Guard.ThrowIfNull(settings);
             this.DataContext = this;
 
             this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
             this.debug = settings.Debug;
-            this.filter = settings.OpenFileDialogFilter;
             this.storageFolder = settings.StorageFolderPath;
 
             this.LoadHistoryFile();
 
             this.InitializeComponent();
+            this.openFileDialog = openFileDialog;
         }
 
         public ObservableCollection<string> FileHistory { get; } = new ObservableCollection<string>();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var openFileDialog = new OpenFileDialog
+            if (this.openFileDialog.ShowDialog() == true)
             {
-                Filter = this.filter,
-                Title = "Select an image file",
-                Multiselect = false,
-            };
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                var originalImage = new BitmapImage(new Uri(openFileDialog.FileName));
+                var originalImage = new BitmapImage(new Uri(this.openFileDialog.FileName));
                 this.SelectedImage.Source = originalImage;
                 originalImage.Freeze();
 
@@ -85,7 +78,7 @@ namespace ImageSquared.View
                 this.currentImageHeight = originalHeight;
                 this.currentImageWidth = originalWidth;
 
-                this.SaveSelectedFile(openFileDialog.FileName);
+                this.SaveSelectedFile(this.openFileDialog.FileName);
             }
         }
 

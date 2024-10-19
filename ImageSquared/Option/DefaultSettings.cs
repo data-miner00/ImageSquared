@@ -12,8 +12,6 @@ public sealed class DefaultSettings
     [Range(0, 100)]
     public int SimilarityPercentageThreshold { get; set; }
 
-    public string OpenFileDialogFilter { get; set; }
-
     public bool Debug { get; set; }
 
     public string StorageFolderPath { get; set; }

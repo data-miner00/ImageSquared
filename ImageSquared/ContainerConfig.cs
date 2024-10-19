@@ -8,6 +8,7 @@ using Autofac.Configuration;
 using ImageSquared.Option;
 using ImageSquared.View;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Win32;
 
 namespace ImageSquared
 {
@@ -19,9 +20,10 @@ namespace ImageSquared
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterSettingsFile();
-
-            builder.RegisterType<MainWindow>().SingleInstance();
+            builder
+                .RegisterSettingsFile()
+                .RegisterOpenFileDialog()
+                .RegisterWindows();
 
             return builder.Build();
         }
@@ -37,6 +39,36 @@ namespace ImageSquared
                 ?? throw new InvalidOperationException("The settings file is missing.");
 
             builder.RegisterInstance(defaultSettings);
+
+            var openFileDialogSettings = config.GetSection(nameof(OpenFileDialogSettings)).Get<OpenFileDialogSettings>()
+                ?? throw new InvalidOperationException("The setting file is missing.");
+
+            builder.RegisterInstance(openFileDialogSettings);
+
+            return builder;
+        }
+
+        private static ContainerBuilder RegisterWindows(this ContainerBuilder builder)
+        {
+            builder.RegisterType<MainWindow>().SingleInstance();
+
+            return builder;
+        }
+
+        private static ContainerBuilder RegisterOpenFileDialog(this ContainerBuilder builder)
+        {
+            builder.Register(ctx =>
+            {
+                var settings = ctx.Resolve<OpenFileDialogSettings>();
+
+                return new OpenFileDialog
+                {
+                    Filter = settings.Filter,
+                    Title = settings.Title,
+                    Multiselect = settings.Multiselect,
+                };
+            })
+                .InstancePerDependency();
 
             return builder;
         }
