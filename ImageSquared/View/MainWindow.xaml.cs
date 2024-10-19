@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -191,5 +192,12 @@ public partial class MainWindow : Window
         };
 
         Process.Start(startProcessInfo);
+    }
+
+    private void btnTogglePosition_Click(object sender, RoutedEventArgs e)
+    {
+        var currentPosition = (int)this.sidebar.GetValue(Grid.ColumnProperty);
+        var newColumn = currentPosition == 0 ? 3 : 0;
+        this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
     }
 }

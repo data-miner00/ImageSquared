@@ -14,15 +14,17 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <userControl:MenuControl Grid.Row="0" Grid.ColumnSpan="3" />
+        <userControl:MenuControl Grid.Row="0" Grid.ColumnSpan="4" />
 
-        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
+        <StackPanel x:Name="sidebar" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Width="400">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <Button x:Name="btnTogglePosition" Click="btnTogglePosition_Click">Toggle position</Button>
                 <Button Content="Select Image"
                         HorizontalAlignment="Left"
                         Margin="30"
