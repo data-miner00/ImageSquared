@@ -11,6 +11,16 @@
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
     </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="AntiqueWhite"/>
+        </Style>
+        <Style TargetType="Button" x:Key="SaveButton">
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Resources>
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -76,7 +86,7 @@
             <Border BorderThickness="1" BorderBrush="Gray" Margin="10">
                 <Image x:Name="TransformedImage" Width="350" Height="350" />
             </Border>
-            <Button x:Name="btnSave" Margin="10" Click="btnSave_Click">Save</Button>
+            <Button x:Name="btnSave" Margin="10" Click="btnSave_Click" Style="{StaticResource SaveButton}">Save</Button>
         </StackPanel>
     </Grid>
 </Window>
