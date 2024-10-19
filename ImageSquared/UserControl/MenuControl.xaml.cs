@@ -1,4 +1,4 @@
-﻿namespace ImageSquared.View.UserControl;
+﻿namespace ImageSquared.UserControl;
 
 using System.Windows.Controls;
 
