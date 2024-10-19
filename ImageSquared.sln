@@ -5,14 +5,15 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageSquared", "ImageSquared\ImageSquared.csproj", "{1B3D5698-3A20-4C10-AC15-10B5D05987B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageSquared.Core", "ImageSquared.Core\ImageSquared.Core.csproj", "{9BBF17B4-8B91-43D6-BCEC-945F7A51156C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageSquared.Core", "ImageSquared.Core\ImageSquared.Core.csproj", "{9BBF17B4-8B91-43D6-BCEC-945F7A51156C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageSquared.Core.UnitTests", "ImageSquared.Core.UnitTests\ImageSquared.Core.UnitTests.csproj", "{3FC2FA49-D47E-4937-B2B9-2EF96C9FD8D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageSquared.Core.UnitTests", "ImageSquared.Core.UnitTests\ImageSquared.Core.UnitTests.csproj", "{3FC2FA49-D47E-4937-B2B9-2EF96C9FD8D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB2406D1-BE4A-4504-96CC-EE0D50C9B906}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		azure-pipelines.yml = azure-pipelines.yml
 		Directory.Build.props = Directory.Build.props
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
