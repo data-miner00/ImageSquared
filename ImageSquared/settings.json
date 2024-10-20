@@ -2,7 +2,8 @@
   "DefaultSettings": {
     "similarityPercentageThreshold": 90,
     "debug": false,
-    "storageFolderPath": "outputs"
+    "storageFolderPath": "outputs",
+    "historyFilePath": "histfile.txt"
   },
   "OpenFileDialogSettings": {
     "filter": "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png",

@@ -2,6 +2,8 @@
 
 using System;
 using Autofac;
+using ImageSquared.Core.Repositories;
+using ImageSquared.Integrations.Repositories;
 using ImageSquared.Option;
 using ImageSquared.View;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,7 @@ internal static class ContainerConfig
 
         builder
             .RegisterSettingsFile()
+            .RegisterRepositories()
             .RegisterOpenFileDialog()
             .RegisterWindows();
 
@@ -59,17 +62,33 @@ internal static class ContainerConfig
 
     private static ContainerBuilder RegisterOpenFileDialog(this ContainerBuilder builder)
     {
-        builder.Register(ctx =>
-        {
-            var settings = ctx.Resolve<OpenFileDialogSettings>();
-
-            return new OpenFileDialog
+        builder
+            .Register(ctx =>
             {
-                Filter = settings.Filter,
-                Title = settings.Title,
-                Multiselect = settings.Multiselect,
-            };
-        })
+                var settings = ctx.Resolve<OpenFileDialogSettings>();
+
+                return new OpenFileDialog
+                {
+                    Filter = settings.Filter,
+                    Title = settings.Title,
+                    Multiselect = settings.Multiselect,
+                };
+            })
+            .InstancePerDependency();
+
+        return builder;
+    }
+
+    private static ContainerBuilder RegisterRepositories(this ContainerBuilder builder)
+    {
+        builder
+            .Register(ctx =>
+            {
+                var settings = ctx.Resolve<DefaultSettings>();
+
+                return new FileHistoryRepository(settings.HistoryFilePath);
+            })
+            .As<IHistoryRepository>()
             .InstancePerDependency();
 
         return builder;

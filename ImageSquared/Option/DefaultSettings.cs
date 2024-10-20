@@ -23,4 +23,9 @@ public sealed class DefaultSettings
     /// Gets or sets the image output folder.
     /// </summary>
     public string StorageFolderPath { get; set; }
+
+    /// <summary>
+    /// Gets or sets the history file path.
+    /// </summary>
+    public string HistoryFilePath { get; set; }
 }

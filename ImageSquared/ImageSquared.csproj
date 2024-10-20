@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImageSquared.Core\ImageSquared.Core.csproj" />
+    <ProjectReference Include="..\ImageSquared.Integrations\ImageSquared.Integrations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

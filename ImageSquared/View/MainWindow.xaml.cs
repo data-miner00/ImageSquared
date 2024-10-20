@@ -1,6 +1,7 @@
 ﻿namespace ImageSquared.View;
 
 using ImageSquared.Core;
+using ImageSquared.Core.Repositories;
 using ImageSquared.Option;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
@@ -18,8 +19,6 @@ using IO = System.IO;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const string HistoryFileName = "histfile.txt";
-
     private static readonly Brush BlackBrush = new SolidColorBrush(Colors.Black);
     private static readonly Pen Pen = new(Brushes.Blue, 5); // Blue pen with 5px thickness
 
@@ -29,7 +28,7 @@ public partial class MainWindow : Window
     private readonly bool debug;
     private readonly string storageFolder;
     private readonly OpenFileDialog openFileDialog;
-
+    private readonly IHistoryRepository historyRepository;
     private BitmapImage? currentImage;
     private RenderTargetBitmap? transformedBitmapImage;
     private int currentImageHeight;
@@ -45,11 +44,16 @@ public partial class MainWindow : Window
     /// </summary>
     /// <param name="settings">The default settings.</param>
     /// <param name="openFileDialog">The open file dialog.</param>
-    public MainWindow(DefaultSettings settings, OpenFileDialog openFileDialog)
+    /// <param name="historyRepository">The history repository.</param>
+    public MainWindow(
+        DefaultSettings settings,
+        OpenFileDialog openFileDialog,
+        IHistoryRepository historyRepository)
     {
         Guard.ThrowIfNull(settings);
         this.DataContext = this;
 
+        this.historyRepository = Guard.ThrowIfNull(historyRepository);
         this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
         this.debug = settings.Debug;
         this.storageFolder = settings.StorageFolderPath;
@@ -141,25 +145,20 @@ public partial class MainWindow : Window
 
     private void LoadHistoryFile()
     {
-        if (!File.Exists(HistoryFileName))
-        {
-            return;
-        }
+        var fileNames = this.historyRepository.GetAllAsync().GetAwaiter().GetResult();
 
-        var fileName = File.ReadAllLines(HistoryFileName);
-
-        foreach (var line in fileName)
+        foreach (var filePath in fileNames)
         {
-            this.FileHistory.Add(line);
+            this.FileHistory.Add(filePath);
         }
     }
 
     private void SaveSelectedFile(string filePath)
     {
         this.FileHistory.Add(filePath);
-        using var stream = File.AppendText(HistoryFileName);
 
-        stream.WriteLine(filePath);
+        // dont await
+        this.historyRepository.AddAsync(filePath);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -191,11 +190,21 @@ public partial class MainWindow : Window
             UseShellExecute = true,
         };
 
-        Process.Start(startProcessInfo);
+        try
+        {
+            Process.Start(startProcessInfo);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+        }
+
+        //Application.Current.Shutdown();
     }
 
     private void btnTogglePosition_Click(object sender, RoutedEventArgs e)
     {
+        // same as Grid.GetColumn, Grid.SetColumn
         var currentPosition = (int)this.sidebar.GetValue(Grid.ColumnProperty);
         var newColumn = currentPosition == 0 ? 3 : 0;
         this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
