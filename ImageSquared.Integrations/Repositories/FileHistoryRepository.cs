@@ -27,16 +27,18 @@ public sealed class FileHistoryRepository : IHistoryRepository
     /// <inheritdoc/>
     public Task AddAsync(string filePath, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         using var stream = File.AppendText(this.historyFilePath);
 
-        stream.WriteLine(filePath);
-
-        return Task.CompletedTask;
+        return stream.WriteLineAsync(filePath);
     }
 
     /// <inheritdoc/>
     public Task<IEnumerable<string>> GetAllAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (!File.Exists(this.historyFilePath))
         {
             return Task.FromResult(Enumerable.Empty<string>());

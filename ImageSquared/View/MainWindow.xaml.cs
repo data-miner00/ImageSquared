@@ -71,7 +71,7 @@ public partial class MainWindow : Window
 
     private static string GenerateRandomImageName()
     {
-        var randomName = $"{Guid.NewGuid()}.bmp";
+        var randomName = $"{Guid.NewGuid()}.png";
         return randomName;
     }
 
@@ -176,7 +176,7 @@ public partial class MainWindow : Window
 
         using (var fileStream = File.Open(fullPath, FileMode.Create))
         {
-            var encoder = new BmpBitmapEncoder();
+            var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(this.transformedBitmapImage));
 
             encoder.Save(fileStream);
