@@ -198,8 +198,6 @@ public partial class MainWindow : Window
         {
             Console.Error.WriteLine(ex.Message);
         }
-
-        //Application.Current.Shutdown();
     }
 
     private void btnTogglePosition_Click(object sender, RoutedEventArgs e)

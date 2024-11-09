@@ -1,5 +1,6 @@
 ﻿namespace ImageSquared.UserControl;
 
+using System.Windows;
 using System.Windows.Controls;
 
 /// <summary>
@@ -13,5 +14,10 @@ public partial class MenuControl : UserControl
     public MenuControl()
     {
         this.InitializeComponent();
+    }
+
+    private void menuExit_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        Application.Current.Shutdown();
     }
 }

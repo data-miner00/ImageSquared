@@ -9,8 +9,8 @@
     <Grid>
         <Menu>
             <MenuItem Header="_File">
-                <MenuItem Header="_Open"></MenuItem>
-                <MenuItem Header="_Exit"></MenuItem>
+                <MenuItem Header="_Browse"></MenuItem>
+                <MenuItem Header="_Exit" x:Name="menuExit" Click="menuExit_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit"></MenuItem>
             <MenuItem Header="_View"></MenuItem>
