@@ -56,6 +56,12 @@ internal static class ContainerConfig
     private static ContainerBuilder RegisterWindows(this ContainerBuilder builder)
     {
         builder.RegisterType<MainWindow>().SingleInstance();
+        builder.Register<Func<HistoryWindow>>(ctx =>
+        {
+            var historyRepository = ctx.Resolve<IHistoryRepository>();
+
+            return () => new HistoryWindow(historyRepository);
+        });
 
         return builder;
     }

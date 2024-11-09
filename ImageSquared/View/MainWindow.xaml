@@ -31,14 +31,13 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="400" />
-            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <userControl:MenuControl Grid.Row="0" Grid.ColumnSpan="4" />
 
         <StackPanel x:Name="sidebar" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Width="400">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <Button x:Name="btnTogglePosition" Click="btnTogglePosition_Click">Toggle position</Button>
+                <Button x:Name="btnTogglePosition" Click="btnTogglePosition_Click">Open History</Button>
                 <Button Content="Select Image"
                         HorizontalAlignment="Left"
                         Margin="30"
@@ -72,9 +71,6 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}" />
-            </ScrollViewer>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1">

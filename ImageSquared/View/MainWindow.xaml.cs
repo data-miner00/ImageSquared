@@ -28,6 +28,7 @@ public partial class MainWindow : Window
     private readonly bool debug;
     private readonly string storageFolder;
     private readonly OpenFileDialog openFileDialog;
+    private readonly Func<HistoryWindow> historyWindow;
     private readonly IHistoryRepository historyRepository;
     private BitmapImage? currentImage;
     private RenderTargetBitmap? transformedBitmapImage;
@@ -45,10 +46,12 @@ public partial class MainWindow : Window
     /// <param name="settings">The default settings.</param>
     /// <param name="openFileDialog">The open file dialog.</param>
     /// <param name="historyRepository">The history repository.</param>
+    /// <param name="historyWindow">The history window.</param>
     public MainWindow(
         DefaultSettings settings,
         OpenFileDialog openFileDialog,
-        IHistoryRepository historyRepository)
+        IHistoryRepository historyRepository,
+        Func<HistoryWindow> historyWindow)
     {
         Guard.ThrowIfNull(settings);
         this.DataContext = this;
@@ -57,17 +60,10 @@ public partial class MainWindow : Window
         this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
         this.debug = settings.Debug;
         this.storageFolder = settings.StorageFolderPath;
-
-        this.LoadHistoryFile();
-
-        this.InitializeComponent();
         this.openFileDialog = openFileDialog;
+        this.historyWindow = historyWindow;
+        this.InitializeComponent();
     }
-
-    /// <summary>
-    /// Gets the observable file history.
-    /// </summary>
-    public ObservableCollection<string> FileHistory { get; } = [];
 
     private static string GenerateRandomImageName()
     {
@@ -143,20 +139,8 @@ public partial class MainWindow : Window
         this.TransformedImage.Source = extendedImage;
     }
 
-    private void LoadHistoryFile()
-    {
-        var fileNames = this.historyRepository.GetAllAsync().GetAwaiter().GetResult();
-
-        foreach (var filePath in fileNames)
-        {
-            this.FileHistory.Add(filePath);
-        }
-    }
-
     private void SaveSelectedFile(string filePath)
     {
-        this.FileHistory.Add(filePath);
-
         // dont await
         this.historyRepository.AddAsync(filePath);
     }
@@ -203,8 +187,10 @@ public partial class MainWindow : Window
     private void btnTogglePosition_Click(object sender, RoutedEventArgs e)
     {
         // same as Grid.GetColumn, Grid.SetColumn
-        var currentPosition = (int)this.sidebar.GetValue(Grid.ColumnProperty);
-        var newColumn = currentPosition == 0 ? 3 : 0;
-        this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
+        //var currentPosition = (int)this.sidebar.GetValue(Grid.ColumnProperty);
+        //var newColumn = currentPosition == 0 ? 3 : 0;
+        //this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
+
+        this.historyWindow().Show();
     }
 }
