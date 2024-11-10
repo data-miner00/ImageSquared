@@ -9,7 +9,7 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Width="900"
-        Height="460"
+        Height="430"
         Title="MainWindow">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
@@ -41,14 +41,13 @@
 
         <StackPanel Grid.ColumnSpan="2">
             <Button x:Name="btnTogglePosition" Click="btnTogglePosition_Click" HorizontalAlignment="Left">Open History</Button>
-            <Button Content="Select Image"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Click="Button_Click"
-                    RenderTransformOrigin="1.194,0.719">
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
+            <Button Margin="10" Click="Button_Click">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="Beige"/>
+                        <Setter Property="Background" Value="AliceBlue"/>
                         <Setter Property="Cursor" Value="Hand"/>
 
                         <Style.Triggers>
@@ -59,25 +58,10 @@
                     </Style>
                 </Button.Style>
 
-                <!-- or using Setter Property="Template" with Setter.Value inside-->
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="100"
-                                Height="25"
-                                CornerRadius="12"
-                                Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
+                <Border BorderBrush="Gray" BorderThickness="1">
+                    <Image x:Name="SelectedImage" Height="350" Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}" />
+                </Border>
             </Button>
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
-            <Border BorderBrush="Gray" BorderThickness="1" Margin="10">
-                <Image x:Name="SelectedImage" Height="350" Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}" />
-            </Border>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding CurrentImageWidth}"></TextBlock>
                 <TextBlock>x</TextBlock>
