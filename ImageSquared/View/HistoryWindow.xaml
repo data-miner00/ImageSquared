@@ -11,11 +11,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         
         <TextBlock Grid.Row="0">History</TextBlock>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}" />
         </ScrollViewer>
+        <TextBox Text="{Binding ElementName=lvRecentImages,Path=SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 Grid.Row="2"></TextBox>
     </Grid>
 </Window>
