@@ -137,6 +137,8 @@ public partial class MainWindow : Window
         this.transformedBitmapImage = extendedImage;
 
         this.TransformedImage.Source = extendedImage;
+
+        this.btnSave_Click(sender, e);
     }
 
     private void SaveSelectedFile(string filePath)
