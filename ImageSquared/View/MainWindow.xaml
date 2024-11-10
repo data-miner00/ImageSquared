@@ -9,7 +9,7 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Width="900"
-        Height="430"
+        Height="460"
         Title="MainWindow">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
@@ -78,6 +78,11 @@
             <Border BorderBrush="Gray" BorderThickness="1" Margin="10">
                 <Image x:Name="SelectedImage" Height="350" Width="350" />
             </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding CurrentImageWidth}"></TextBlock>
+                <TextBlock>x</TextBlock>
+                <TextBlock Text="{Binding CurrentImageHeight}"></TextBlock>
+            </StackPanel>
         </StackPanel>
 
         <Button x:Name="btnSave"
@@ -105,6 +110,11 @@
             <Border BorderThickness="1" BorderBrush="Gray" Margin="10">
                 <Image x:Name="TransformedImage" Width="350" Height="350" />
             </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding StandardizedLength}"></TextBlock>
+                <TextBlock>x</TextBlock>
+                <TextBlock Text="{Binding StandardizedLength}"></TextBlock>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

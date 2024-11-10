@@ -5,8 +5,10 @@ using ImageSquared.Core.Repositories;
 using ImageSquared.Option;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,7 +19,7 @@ using IO = System.IO;
 /// <summary>
 /// Interaction logic for MainWindow.xaml.
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : Window, INotifyPropertyChanged
 {
     private static readonly Brush BlackBrush = new SolidColorBrush(Colors.Black);
     private static readonly Pen Pen = new(Brushes.Blue, 5); // Blue pen with 5px thickness
@@ -34,6 +36,9 @@ public partial class MainWindow : Window
     private RenderTargetBitmap? transformedBitmapImage;
     private int currentImageHeight;
     private int currentImageWidth;
+    private int standardizedLength;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     static MainWindow()
     {
@@ -65,6 +70,45 @@ public partial class MainWindow : Window
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Gets or sets the current image height.
+    /// </summary>
+    public int CurrentImageHeight
+    {
+        get => this.currentImageHeight;
+        set
+        {
+            this.currentImageHeight = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the current image width.
+    /// </summary>
+    public int CurrentImageWidth
+    {
+        get => this.currentImageWidth;
+        set
+        {
+            this.currentImageWidth = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the standardized length of the new image.
+    /// </summary>
+    public int StandardizedLength
+    {
+        get => this.standardizedLength;
+        set
+        {
+            this.standardizedLength = value;
+            this.OnPropertyChanged();
+        }
+    }
+
     private static string GenerateRandomImageName()
     {
         var randomName = $"{Guid.NewGuid()}.png";
@@ -83,8 +127,16 @@ public partial class MainWindow : Window
             var originalWidth = Convert.ToInt32(originalImage.Width);
 
             this.currentImage = originalImage;
-            this.currentImageHeight = originalHeight;
-            this.currentImageWidth = originalWidth;
+            this.CurrentImageHeight = originalHeight;
+            this.CurrentImageWidth = originalWidth;
+
+            var imageOrientation = (this.currentImageHeight - this.currentImageWidth) > 0
+                ? ImageOrientation.Portrait
+                : ImageOrientation.Landscape;
+
+            this.StandardizedLength = imageOrientation == ImageOrientation.Landscape
+                ? this.currentImageWidth
+                : this.currentImageHeight;
 
             this.SaveSelectedFile(this.openFileDialog.FileName);
         }
@@ -194,5 +246,11 @@ public partial class MainWindow : Window
         //this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
 
         this.historyWindow().Show();
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        var args = new PropertyChangedEventArgs(propertyName);
+        this.PropertyChanged?.Invoke(this, args);
     }
 }
