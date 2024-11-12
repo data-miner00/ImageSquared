@@ -3,14 +3,11 @@
 using ImageSquared.Core;
 using ImageSquared.Core.Repositories;
 using ImageSquared.Option;
+using ImageSquared.ViewModel;
 using Microsoft.Win32;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -19,11 +16,12 @@ using IO = System.IO;
 /// <summary>
 /// Interaction logic for MainWindow.xaml.
 /// </summary>
-public partial class MainWindow : Window, INotifyPropertyChanged
+public partial class MainWindow : Window
 {
     private static readonly Brush BlackBrush = new SolidColorBrush(Colors.Black);
     private static readonly Pen Pen = new(Brushes.Blue, 5); // Blue pen with 5px thickness
 
+    private readonly MainWindowViewModel viewModel = new();
     private readonly int similarityPercentageThreshold;
     private readonly int dpiX = 96;
     private readonly int dpiY = 96;
@@ -34,11 +32,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private readonly IHistoryRepository historyRepository;
     private BitmapImage? currentImage;
     private RenderTargetBitmap? transformedBitmapImage;
-    private int currentImageHeight;
-    private int currentImageWidth;
-    private int standardizedLength;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     static MainWindow()
     {
@@ -59,7 +52,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         Func<HistoryWindow> historyWindow)
     {
         Guard.ThrowIfNull(settings);
-        this.DataContext = this;
+        this.DataContext = this.viewModel;
 
         this.historyRepository = Guard.ThrowIfNull(historyRepository);
         this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
@@ -68,45 +61,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         this.openFileDialog = openFileDialog;
         this.historyWindow = historyWindow;
         this.InitializeComponent();
-    }
-
-    /// <summary>
-    /// Gets or sets the current image height.
-    /// </summary>
-    public int CurrentImageHeight
-    {
-        get => this.currentImageHeight;
-        set
-        {
-            this.currentImageHeight = value;
-            this.OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the current image width.
-    /// </summary>
-    public int CurrentImageWidth
-    {
-        get => this.currentImageWidth;
-        set
-        {
-            this.currentImageWidth = value;
-            this.OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the standardized length of the new image.
-    /// </summary>
-    public int StandardizedLength
-    {
-        get => this.standardizedLength;
-        set
-        {
-            this.standardizedLength = value;
-            this.OnPropertyChanged();
-        }
     }
 
     private static string GenerateRandomImageName()
@@ -127,16 +81,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             var originalWidth = Convert.ToInt32(originalImage.Width);
 
             this.currentImage = originalImage;
-            this.CurrentImageHeight = originalHeight;
-            this.CurrentImageWidth = originalWidth;
+            this.viewModel.CurrentImageHeight = originalHeight;
+            this.viewModel.CurrentImageWidth = originalWidth;
 
-            var imageOrientation = (this.currentImageHeight - this.currentImageWidth) > 0
-                ? ImageOrientation.Portrait
-                : ImageOrientation.Landscape;
-
-            this.StandardizedLength = imageOrientation == ImageOrientation.Landscape
-                ? this.currentImageWidth
-                : this.currentImageHeight;
+            this.viewModel.StandardizedLength = this.viewModel.ImageOrientation == ImageOrientation.Landscape
+                ? this.viewModel.CurrentImageWidth
+                : this.viewModel.CurrentImageHeight;
 
             this.SaveSelectedFile(this.openFileDialog.FileName);
         }
@@ -144,18 +94,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void btnConvert_Click(object sender, RoutedEventArgs e)
     {
-        if (this.currentImageHeight == this.currentImageWidth)
+        if (this.viewModel.ImageOrientation == ImageOrientation.Squared)
         {
             return;
         }
 
-        var imageOrientation = (this.currentImageHeight - this.currentImageWidth) > 0
-            ? ImageOrientation.Portrait
-            : ImageOrientation.Landscape;
-
-        var standardLength = imageOrientation == ImageOrientation.Landscape
-            ? this.currentImageWidth
-            : this.currentImageHeight;
+        var imageOrientation = this.viewModel.ImageOrientation;
+        var standardLength = this.viewModel.StandardizedLength;
+        var currentImageWidth = this.viewModel.CurrentImageWidth;
+        var currentImageHeight = this.viewModel.CurrentImageHeight;
 
         var extendedImage = new RenderTargetBitmap(standardLength, standardLength, this.dpiX, this.dpiY, PixelFormats.Pbgra32);
 
@@ -170,17 +117,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
             if (imageOrientation == ImageOrientation.Portrait)
             {
-                var startingPosition = (standardLength / 2) - (this.currentImageWidth / 2);
-                drawingContext.DrawImage(this.currentImage, new Rect(startingPosition, 0, this.currentImageWidth, this.currentImageHeight));
+                var startingPosition = (standardLength / 2) - (currentImageWidth / 2);
+                drawingContext.DrawImage(this.currentImage, new Rect(startingPosition, 0, currentImageWidth, currentImageHeight));
             }
             else if (imageOrientation == ImageOrientation.Landscape)
             {
-                var startingPosition = (standardLength / 2) - (this.currentImageHeight / 2);
-                drawingContext.DrawImage(this.currentImage, new Rect(0, startingPosition, this.currentImageWidth, this.currentImageHeight));
+                var startingPosition = (standardLength / 2) - (currentImageHeight / 2);
+                drawingContext.DrawImage(this.currentImage, new Rect(0, startingPosition, currentImageWidth, currentImageHeight));
             }
             else
             {
-                drawingContext.DrawImage(this.currentImage, new Rect(0, 0, this.currentImageWidth, this.currentImageHeight));
+                drawingContext.DrawImage(this.currentImage, new Rect(0, 0, currentImageWidth, currentImageHeight));
             }
         }
 
@@ -246,11 +193,5 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         //this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
 
         this.historyWindow().Show();
-    }
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        var args = new PropertyChangedEventArgs(propertyName);
-        this.PropertyChanged?.Invoke(this, args);
     }
 }
