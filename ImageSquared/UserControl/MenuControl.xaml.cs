@@ -1,5 +1,6 @@
 ﻿namespace ImageSquared.UserControl;
 
+using ImageSquared.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +14,7 @@ public partial class MenuControl : UserControl
     /// </summary>
     public MenuControl()
     {
+        this.DataContext = (MainWindowViewModel)Application.Current.MainWindow.DataContext;
         this.InitializeComponent();
     }
 

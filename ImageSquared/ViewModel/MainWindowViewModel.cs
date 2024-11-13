@@ -2,6 +2,8 @@
 
 using ImageSquared.Core;
 using ImageSquared.View;
+using System.Windows;
+using System.Windows.Input;
 
 /// <summary>
 /// The view model for <see cref="MainWindow"/>.
@@ -11,6 +13,15 @@ internal sealed class MainWindowViewModel : ViewModel
     private int currentImageWidth;
     private int currentImageHeight;
     private int standardizedLength;
+
+    public MainWindowViewModel()
+    {
+        this.SelectImageCommand = new RelayCommand(_ => this.SelectImage());
+    }
+
+    public ICommand SelectImageCommand { get; }
+
+    public string TestText => "Hello world";
 
     /// <summary>
     /// Gets or sets the current image height.
@@ -77,5 +88,10 @@ internal sealed class MainWindowViewModel : ViewModel
 
             return imageOrientation;
         }
+    }
+
+    private void SelectImage()
+    {
+        MessageBox.Show("Hello");
     }
 }
