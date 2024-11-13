@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     private static readonly Brush BlackBrush = new SolidColorBrush(Colors.Black);
     private static readonly Pen Pen = new(Brushes.Blue, 5); // Blue pen with 5px thickness
 
-    private readonly MainWindowViewModel viewModel = new();
+    private readonly MainWindowViewModel viewModel;
     private readonly int similarityPercentageThreshold;
     private readonly int dpiX = 96;
     private readonly int dpiY = 96;
@@ -50,6 +50,9 @@ public partial class MainWindow : Window
         Func<HistoryWindow> historyWindow)
     {
         Guard.ThrowIfNull(settings);
+
+        this.viewModel = new(this.BrowseImageFile);
+
         this.DataContext = this.viewModel;
 
         this.historyRepository = Guard.ThrowIfNull(historyRepository);
@@ -71,6 +74,11 @@ public partial class MainWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
+        this.BrowseImageFile();
+    }
+
+    private void BrowseImageFile()
+    {
         if (this.openFileDialog.ShowDialog() == true)
         {
             var originalImage = new BitmapImage(new Uri(this.openFileDialog.FileName));
@@ -89,10 +97,6 @@ public partial class MainWindow : Window
 
             this.SaveSelectedFile(this.openFileDialog.FileName);
         }
-    }
-
-    private void BrowseImageFile()
-    {
     }
 
     private void btnConvert_Click(object sender, RoutedEventArgs e)

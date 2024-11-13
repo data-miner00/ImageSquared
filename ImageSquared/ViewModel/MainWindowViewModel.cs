@@ -2,7 +2,6 @@
 
 using ImageSquared.Core;
 using ImageSquared.View;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -20,9 +19,10 @@ internal sealed class MainWindowViewModel : ViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
     /// </summary>
-    public MainWindowViewModel()
+    /// <param name="selectImageAction">The action to select an image.</param>
+    public MainWindowViewModel(Action selectImageAction)
     {
-        this.SelectImageCommand = new RelayCommand(_ => this.SelectImage());
+        this.SelectImageCommand = new RelayCommand(_ => selectImageAction());
     }
 
     /// <summary>
@@ -123,10 +123,5 @@ internal sealed class MainWindowViewModel : ViewModel
             this.transformedBitmapImage = value;
             this.OnPropertyChanged();
         }
-    }
-
-    private void SelectImage()
-    {
-        MessageBox.Show("Hello");
     }
 }
