@@ -1,6 +1,6 @@
 ﻿namespace ImageSquared.ViewModel;
 
-using ImageSquared.Core;
+using ImageSquared.Core.Models;
 using ImageSquared.View;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;

@@ -3,7 +3,12 @@
     "similarityPercentageThreshold": 90,
     "debug": false,
     "storageFolderPath": "outputs",
-    "historyFilePath": "histfile.txt"
+    "historyFilePath": "histfile.txt",
+    "outputSettings": {
+      "imageFormat": "Png",
+      "namingStrategy": "Timestamp",
+      "prefix": "img-"
+    }
   },
   "OpenFileDialogSettings": {
     "filter": "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png",

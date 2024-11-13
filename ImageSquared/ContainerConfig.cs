@@ -1,7 +1,10 @@
 ﻿namespace ImageSquared;
 
 using System;
+using System.Windows.Media.Imaging;
 using Autofac;
+using ImageSquared.Core;
+using ImageSquared.Core.Models;
 using ImageSquared.Core.Repositories;
 using ImageSquared.Integrations.Repositories;
 using ImageSquared.Option;
@@ -28,6 +31,8 @@ internal static class ContainerConfig
             .RegisterSettingsFile()
             .RegisterRepositories()
             .RegisterOpenFileDialog()
+            .RegisterNamingStrategy()
+            .RegisterBitmapEncoders()
             .RegisterWindows();
 
         return builder.Build();
@@ -96,6 +101,45 @@ internal static class ContainerConfig
             })
             .As<IHistoryRepository>()
             .InstancePerDependency();
+
+        return builder;
+    }
+
+    private static ContainerBuilder RegisterNamingStrategy(this ContainerBuilder builder)
+    {
+        builder
+            .Register(ctx =>
+            {
+                var settings = ctx.Resolve<DefaultSettings>();
+
+                var imageFormat = settings.OutputSettings.ImageFormat;
+                Guard.ThrowIfDefault(imageFormat);
+
+                var namingStrategy = settings.OutputSettings.NamingStrategy;
+                Guard.ThrowIfDefault(namingStrategy);
+
+                var prefix = settings.OutputSettings.Prefix;
+                var factory = new OutputNamingStrategyFactory(imageFormat, prefix);
+
+                return factory.Create(namingStrategy);
+            })
+            .As<IOutputNamingStrategy>()
+            .SingleInstance();
+
+        return builder;
+    }
+
+    private static ContainerBuilder RegisterBitmapEncoders(this ContainerBuilder builder)
+    {
+        var encoders = new Dictionary<ImageFormat, BitmapEncoder>
+        {
+            { ImageFormat.Png, new PngBitmapEncoder() },
+            { ImageFormat.Bmp, new BmpBitmapEncoder() },
+            { ImageFormat.Jpg, new JpegBitmapEncoder() },
+            { ImageFormat.Tiff, new TiffBitmapEncoder() },
+        };
+
+        builder.RegisterInstance<IDictionary<ImageFormat, BitmapEncoder>>(encoders);
 
         return builder;
     }

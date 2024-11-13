@@ -28,4 +28,9 @@ public sealed class DefaultSettings
     /// Gets or sets the history file path.
     /// </summary>
     public string HistoryFilePath { get; set; }
+
+    /// <summary>
+    /// Gets or sets the output file settings.
+    /// </summary>
+    public OutputSettings OutputSettings { get; set; }
 }

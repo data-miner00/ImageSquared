@@ -1,4 +1,4 @@
-﻿namespace ImageSquared.Core;
+﻿namespace ImageSquared.Core.Models;
 
 /// <summary>
 /// The types of image orientation.

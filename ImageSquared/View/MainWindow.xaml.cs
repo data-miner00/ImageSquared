@@ -1,6 +1,7 @@
 ﻿namespace ImageSquared.View;
 
 using ImageSquared.Core;
+using ImageSquared.Core.Models;
 using ImageSquared.Core.Repositories;
 using ImageSquared.Option;
 using ImageSquared.ViewModel;
@@ -10,8 +11,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-using IO = System.IO;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml.
@@ -29,6 +28,7 @@ public partial class MainWindow : Window
     private readonly string storageFolder;
     private readonly OpenFileDialog openFileDialog;
     private readonly Func<HistoryWindow> historyWindow;
+    private readonly IOutputNamingStrategy outputNaming;
     private readonly IHistoryRepository historyRepository;
 
     static MainWindow()
@@ -43,34 +43,34 @@ public partial class MainWindow : Window
     /// <param name="openFileDialog">The open file dialog.</param>
     /// <param name="historyRepository">The history repository.</param>
     /// <param name="historyWindow">The history window.</param>
+    /// <param name="outputNaming">The naming strategy for output.</param>
     public MainWindow(
         DefaultSettings settings,
         OpenFileDialog openFileDialog,
         IHistoryRepository historyRepository,
-        Func<HistoryWindow> historyWindow)
+        Func<HistoryWindow> historyWindow,
+        IOutputNamingStrategy outputNaming)
     {
         Guard.ThrowIfNull(settings);
 
         this.viewModel = new(this.BrowseImageFile);
-
         this.DataContext = this.viewModel;
 
         this.historyRepository = Guard.ThrowIfNull(historyRepository);
         this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;
         this.debug = settings.Debug;
+
         this.storageFolder = settings.StorageFolderPath;
+        Directory.CreateDirectory(this.storageFolder);
+
         this.openFileDialog = openFileDialog;
         this.historyWindow = historyWindow;
+        this.outputNaming = Guard.ThrowIfNull(outputNaming);
+
         this.InitializeComponent();
     }
 
     internal MainWindowViewModel ViewModel => this.viewModel;
-
-    private static string GenerateRandomImageName()
-    {
-        var randomName = $"{Guid.NewGuid()}.png";
-        return randomName;
-    }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
@@ -160,10 +160,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var randomName = GenerateRandomImageName();
-        Directory.CreateDirectory(this.storageFolder);
+        var randomName = this.outputNaming.Generate();
 
-        var fullPath = IO.Path.Combine(this.storageFolder, randomName);
+        var fullPath = System.IO.Path.Combine(this.storageFolder, randomName);
 
         using (var fileStream = File.Open(fullPath, FileMode.Create))
         {
