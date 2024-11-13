@@ -17,7 +17,7 @@ public sealed class GuidNamingStrategy : IOutputNamingStrategy
     /// <param name="prefix">The optional prefix.</param>
     public GuidNamingStrategy(string fileExtension, string? prefix = null)
     {
-        this.fileExtension = fileExtension;
+        this.fileExtension = Guard.ThrowIfNullOrWhitespace(fileExtension);
         this.prefix = prefix;
     }
 

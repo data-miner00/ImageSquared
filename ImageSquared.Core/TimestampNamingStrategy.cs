@@ -17,7 +17,7 @@ public sealed class TimestampNamingStrategy : IOutputNamingStrategy
     /// <param name="prefix">The optional prefix.</param>
     public TimestampNamingStrategy(string fileExtension, string? prefix = null)
     {
-        this.fileExtension = fileExtension;
+        this.fileExtension = Guard.ThrowIfNullOrWhitespace(fileExtension);
         this.prefix = prefix;
     }
 
