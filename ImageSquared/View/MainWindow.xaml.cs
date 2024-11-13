@@ -30,8 +30,6 @@ public partial class MainWindow : Window
     private readonly OpenFileDialog openFileDialog;
     private readonly Func<HistoryWindow> historyWindow;
     private readonly IHistoryRepository historyRepository;
-    private BitmapImage? currentImage;
-    private RenderTargetBitmap? transformedBitmapImage;
 
     static MainWindow()
     {
@@ -63,6 +61,8 @@ public partial class MainWindow : Window
         this.InitializeComponent();
     }
 
+    internal MainWindowViewModel ViewModel => this.viewModel;
+
     private static string GenerateRandomImageName()
     {
         var randomName = $"{Guid.NewGuid()}.png";
@@ -74,13 +74,12 @@ public partial class MainWindow : Window
         if (this.openFileDialog.ShowDialog() == true)
         {
             var originalImage = new BitmapImage(new Uri(this.openFileDialog.FileName));
-            this.SelectedImage.Source = originalImage;
             originalImage.Freeze();
 
             var originalHeight = Convert.ToInt32(originalImage.Height);
             var originalWidth = Convert.ToInt32(originalImage.Width);
 
-            this.currentImage = originalImage;
+            this.viewModel.CurrentImage = originalImage;
             this.viewModel.CurrentImageHeight = originalHeight;
             this.viewModel.CurrentImageWidth = originalWidth;
 
@@ -90,6 +89,10 @@ public partial class MainWindow : Window
 
             this.SaveSelectedFile(this.openFileDialog.FileName);
         }
+    }
+
+    private void BrowseImageFile()
+    {
     }
 
     private void btnConvert_Click(object sender, RoutedEventArgs e)
@@ -103,6 +106,7 @@ public partial class MainWindow : Window
         var standardLength = this.viewModel.StandardizedLength;
         var currentImageWidth = this.viewModel.CurrentImageWidth;
         var currentImageHeight = this.viewModel.CurrentImageHeight;
+        var currentImage = this.viewModel.CurrentImage;
 
         var extendedImage = new RenderTargetBitmap(standardLength, standardLength, this.dpiX, this.dpiY, PixelFormats.Pbgra32);
 
@@ -118,24 +122,22 @@ public partial class MainWindow : Window
             if (imageOrientation == ImageOrientation.Portrait)
             {
                 var startingPosition = (standardLength / 2) - (currentImageWidth / 2);
-                drawingContext.DrawImage(this.currentImage, new Rect(startingPosition, 0, currentImageWidth, currentImageHeight));
+                drawingContext.DrawImage(currentImage, new Rect(startingPosition, 0, currentImageWidth, currentImageHeight));
             }
             else if (imageOrientation == ImageOrientation.Landscape)
             {
                 var startingPosition = (standardLength / 2) - (currentImageHeight / 2);
-                drawingContext.DrawImage(this.currentImage, new Rect(0, startingPosition, currentImageWidth, currentImageHeight));
+                drawingContext.DrawImage(currentImage, new Rect(0, startingPosition, currentImageWidth, currentImageHeight));
             }
             else
             {
-                drawingContext.DrawImage(this.currentImage, new Rect(0, 0, currentImageWidth, currentImageHeight));
+                drawingContext.DrawImage(currentImage, new Rect(0, 0, currentImageWidth, currentImageHeight));
             }
         }
 
         extendedImage.Render(visual);
 
-        this.transformedBitmapImage = extendedImage;
-
-        this.TransformedImage.Source = extendedImage;
+        this.viewModel.TransformedBitmapImage = extendedImage;
 
         this.btnSave_Click(sender, e);
     }
@@ -148,7 +150,7 @@ public partial class MainWindow : Window
 
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
-        if (this.transformedBitmapImage is null)
+        if (this.viewModel.TransformedBitmapImage is null)
         {
             _ = MessageBox.Show("Please select an image first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
@@ -162,7 +164,7 @@ public partial class MainWindow : Window
         using (var fileStream = File.Open(fullPath, FileMode.Create))
         {
             var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(this.transformedBitmapImage));
+            encoder.Frames.Add(BitmapFrame.Create(this.viewModel.TransformedBitmapImage));
 
             encoder.Save(fileStream);
         }

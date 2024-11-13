@@ -4,6 +4,7 @@ using ImageSquared.Core;
 using ImageSquared.View;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 /// <summary>
 /// The view model for <see cref="MainWindow"/>.
@@ -13,12 +14,20 @@ internal sealed class MainWindowViewModel : ViewModel
     private int currentImageWidth;
     private int currentImageHeight;
     private int standardizedLength;
+    private BitmapImage? currentImage;
+    private RenderTargetBitmap? transformedBitmapImage;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
+    /// </summary>
     public MainWindowViewModel()
     {
         this.SelectImageCommand = new RelayCommand(_ => this.SelectImage());
     }
 
+    /// <summary>
+    /// Gets the command to select an image.
+    /// </summary>
     public ICommand SelectImageCommand { get; }
 
     public string TestText => "Hello world";
@@ -87,6 +96,32 @@ internal sealed class MainWindowViewModel : ViewModel
             }
 
             return imageOrientation;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the current image selected by the user.
+    /// </summary>
+    public BitmapImage? CurrentImage
+    {
+        get => this.currentImage;
+        set
+        {
+            this.currentImage = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the transformed image from <see cref="CurrentImage"/>.
+    /// </summary>
+    public RenderTargetBitmap? TransformedBitmapImage
+    {
+        get => this.transformedBitmapImage;
+        set
+        {
+            this.transformedBitmapImage = value;
+            this.OnPropertyChanged();
         }
     }
 
