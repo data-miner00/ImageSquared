@@ -28,8 +28,10 @@ public partial class MainWindow : Window
     private readonly string storageFolder;
     private readonly OpenFileDialog openFileDialog;
     private readonly Func<HistoryWindow> historyWindow;
+    private readonly IDictionary<ImageFormat, BitmapEncoder> encoders;
     private readonly IOutputNamingStrategy outputNaming;
     private readonly IHistoryRepository historyRepository;
+    private readonly ImageFormat currentImageFormat;
 
     static MainWindow()
     {
@@ -44,12 +46,14 @@ public partial class MainWindow : Window
     /// <param name="historyRepository">The history repository.</param>
     /// <param name="historyWindow">The history window.</param>
     /// <param name="outputNaming">The naming strategy for output.</param>
+    /// <param name="encoders">The collection of Bitmap encoders.</param>
     public MainWindow(
         DefaultSettings settings,
         OpenFileDialog openFileDialog,
         IHistoryRepository historyRepository,
         Func<HistoryWindow> historyWindow,
-        IOutputNamingStrategy outputNaming)
+        IOutputNamingStrategy outputNaming,
+        IDictionary<ImageFormat, BitmapEncoder> encoders)
     {
         Guard.ThrowIfNull(settings);
 
@@ -65,7 +69,9 @@ public partial class MainWindow : Window
 
         this.openFileDialog = openFileDialog;
         this.historyWindow = historyWindow;
+        this.encoders = Guard.ThrowIfNull(encoders);
         this.outputNaming = Guard.ThrowIfNull(outputNaming);
+        this.currentImageFormat = settings.OutputSettings.ImageFormat;
 
         this.InitializeComponent();
     }
@@ -164,9 +170,15 @@ public partial class MainWindow : Window
 
         var fullPath = System.IO.Path.Combine(this.storageFolder, randomName);
 
+        this.encoders.TryGetValue(this.currentImageFormat, out var encoder);
+
+        if (encoder is null)
+        {
+            throw new InvalidOperationException("Image format not supported.");
+        }
+
         using (var fileStream = File.Open(fullPath, FileMode.Create))
         {
-            var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(this.viewModel.TransformedBitmapImage));
 
             encoder.Save(fileStream);
