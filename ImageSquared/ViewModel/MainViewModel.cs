@@ -1,5 +1,6 @@
 ﻿namespace ImageSquared.ViewModel;
 
+using ImageSquared.Core;
 using System.Windows.Input;
 
 public sealed class MainViewModel : ViewModel
@@ -8,9 +9,12 @@ public sealed class MainViewModel : ViewModel
 
     public MainViewModel(ConversionViewModel conversionViewModel, HistoryViewModel historyViewModel)
     {
-        this.ConversionViewModel = conversionViewModel;
-        this.HistoryViewModel = historyViewModel;
+        this.ConversionViewModel = Guard.ThrowIfNull(conversionViewModel);
+        this.HistoryViewModel = Guard.ThrowIfNull(historyViewModel);
         this.SelectViewModelCommand = new RelayCommand(this.SelectViewModel);
+
+        // Initialize to conversion view when loaded.
+        this.SelectedViewModel = conversionViewModel;
     }
 
     public ICommand SelectViewModelCommand { get; }

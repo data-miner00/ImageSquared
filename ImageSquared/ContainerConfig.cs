@@ -1,6 +1,7 @@
 ﻿namespace ImageSquared;
 
 using System;
+using System.IO;
 using System.Windows.Media.Imaging;
 using Autofac;
 using ImageSquared.Core;
@@ -50,6 +51,7 @@ internal static class ContainerConfig
         var defaultSettings = config.GetSection(nameof(DefaultSettings)).Get<DefaultSettings>()
             ?? throw new InvalidOperationException("The settings file is missing.");
 
+        Directory.CreateDirectory(defaultSettings.StorageFolderPath);
         builder.RegisterInstance(defaultSettings);
 
         var openFileDialogSettings = config.GetSection(nameof(OpenFileDialogSettings)).Get<OpenFileDialogSettings>()

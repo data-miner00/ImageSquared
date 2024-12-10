@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 /// <summary>
 /// The view model for <see cref="MainWindow"/>.
 /// </summary>
-internal sealed class MainWindowViewModel : ViewModel
+public sealed class MainWindowViewModel : ViewModel
 {
     private int currentImageWidth;
     private int currentImageHeight;
