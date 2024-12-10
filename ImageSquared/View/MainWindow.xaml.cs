@@ -50,12 +50,13 @@ public partial class MainWindow : Window
         OpenFileDialog openFileDialog,
         IHistoryRepository historyRepository,
         IOutputNamingStrategy outputNaming,
-        IDictionary<ImageFormat, BitmapEncoder> encoders)
+        IDictionary<ImageFormat, BitmapEncoder> encoders,
+        MainViewModel viewModel2)
     {
         Guard.ThrowIfNull(settings);
 
         this.viewModel = new(this.BrowseImageFile);
-        this.DataContext = this.viewModel;
+        this.DataContext = viewModel2;
 
         this.historyRepository = Guard.ThrowIfNull(historyRepository);
         this.similarityPercentageThreshold = settings.SimilarityPercentageThreshold;

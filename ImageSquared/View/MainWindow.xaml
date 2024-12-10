@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageSquared.View"
         xmlns:userControl="clr-namespace:ImageSquared.UserControl"
+        xmlns:viewModel="clr-namespace:ImageSquared.ViewModel"
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="NoResize"
         Width="900"
         Height="430"
-        Title="MainWindow">
+        Title="Image Squared">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
     </WindowChrome.WindowChrome>
@@ -24,8 +25,32 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="18" />
         </Style>
+        <DataTemplate DataType="{x:Type viewModel:ConversionViewModel}">
+            <local:ConversionView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:HistoryViewModel}">
+            <local:HistoryView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu FontSize="20">
+          <MenuItem Header="_View">
+            <MenuItem Header="_Customers"
+                      Command="{Binding SelectViewModelCommand}"
+                      CommandParameter="{Binding ConversionViewModel}"/>
+            <MenuItem Header="_Products"
+                      Command="{Binding SelectViewModelCommand}"
+                      CommandParameter="{Binding HistoryViewModel}"/>
+          </MenuItem>
+        </Menu>
+
+        <ContentControl Grid.Row="1" Content="{Binding SelectedViewModel}"/>
+
+        <!--
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -102,5 +127,5 @@
                 <TextBlock Text="{Binding StandardizedLength}"></TextBlock>
             </StackPanel>
         </StackPanel>
-    </Grid>
+    --></Grid>
 </Window>

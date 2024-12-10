@@ -9,6 +9,7 @@ using ImageSquared.Core.Repositories;
 using ImageSquared.Integrations.Repositories;
 using ImageSquared.Option;
 using ImageSquared.View;
+using ImageSquared.ViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 
@@ -33,6 +34,7 @@ internal static class ContainerConfig
             .RegisterOpenFileDialog()
             .RegisterNamingStrategy()
             .RegisterBitmapEncoders()
+            .RegisterViewModels()
             .RegisterWindows();
 
         return builder.Build();
@@ -61,12 +63,6 @@ internal static class ContainerConfig
     private static ContainerBuilder RegisterWindows(this ContainerBuilder builder)
     {
         builder.RegisterType<MainWindow>().SingleInstance();
-        builder.Register<Func<HistoryWindow>>(ctx =>
-        {
-            var historyRepository = ctx.Resolve<IHistoryRepository>();
-
-            return () => new HistoryWindow(historyRepository);
-        });
 
         return builder;
     }
@@ -140,6 +136,15 @@ internal static class ContainerConfig
         };
 
         builder.RegisterInstance<IDictionary<ImageFormat, BitmapEncoder>>(encoders);
+
+        return builder;
+    }
+
+    private static ContainerBuilder RegisterViewModels(this ContainerBuilder builder)
+    {
+        builder.RegisterType<ConversionViewModel>();
+        builder.RegisterType<HistoryViewModel>();
+        builder.RegisterType<MainViewModel>();
 
         return builder;
     }

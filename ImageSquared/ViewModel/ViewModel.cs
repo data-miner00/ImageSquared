@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 /// <summary>
 /// The base model for view models.
 /// </summary>
-internal abstract class ViewModel : INotifyPropertyChanged
+public abstract class ViewModel : INotifyPropertyChanged
 {
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
