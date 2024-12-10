@@ -27,7 +27,6 @@ public partial class MainWindow : Window
     private readonly bool debug;
     private readonly string storageFolder;
     private readonly OpenFileDialog openFileDialog;
-    private readonly Func<HistoryWindow> historyWindow;
     private readonly IDictionary<ImageFormat, BitmapEncoder> encoders;
     private readonly IOutputNamingStrategy outputNaming;
     private readonly IHistoryRepository historyRepository;
@@ -44,14 +43,12 @@ public partial class MainWindow : Window
     /// <param name="settings">The default settings.</param>
     /// <param name="openFileDialog">The open file dialog.</param>
     /// <param name="historyRepository">The history repository.</param>
-    /// <param name="historyWindow">The history window.</param>
     /// <param name="outputNaming">The naming strategy for output.</param>
     /// <param name="encoders">The collection of Bitmap encoders.</param>
     public MainWindow(
         DefaultSettings settings,
         OpenFileDialog openFileDialog,
         IHistoryRepository historyRepository,
-        Func<HistoryWindow> historyWindow,
         IOutputNamingStrategy outputNaming,
         IDictionary<ImageFormat, BitmapEncoder> encoders)
     {
@@ -68,7 +65,6 @@ public partial class MainWindow : Window
         Directory.CreateDirectory(this.storageFolder);
 
         this.openFileDialog = openFileDialog;
-        this.historyWindow = historyWindow;
         this.encoders = Guard.ThrowIfNull(encoders);
         this.outputNaming = Guard.ThrowIfNull(outputNaming);
         this.currentImageFormat = settings.OutputSettings.ImageFormat;
@@ -200,15 +196,5 @@ public partial class MainWindow : Window
         {
             Console.Error.WriteLine(ex.Message);
         }
-    }
-
-    private void btnTogglePosition_Click(object sender, RoutedEventArgs e)
-    {
-        // same as Grid.GetColumn, Grid.SetColumn
-        //var currentPosition = (int)this.sidebar.GetValue(Grid.ColumnProperty);
-        //var newColumn = currentPosition == 0 ? 3 : 0;
-        //this.sidebar.SetValue(Grid.ColumnProperty, newColumn);
-
-        this.historyWindow().Show();
     }
 }

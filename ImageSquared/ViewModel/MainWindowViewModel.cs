@@ -30,8 +30,6 @@ internal sealed class MainWindowViewModel : ViewModel
     /// </summary>
     public ICommand SelectImageCommand { get; }
 
-    public string TestText => "Hello world";
-
     /// <summary>
     /// Gets or sets the current image height.
     /// </summary>

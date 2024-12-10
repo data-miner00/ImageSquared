@@ -1,5 +1,6 @@
 ﻿namespace ImageSquared.ViewModel;
 
+using ImageSquared.Core;
 using System;
 using System.Windows.Input;
 
@@ -18,7 +19,7 @@ internal sealed class RelayCommand : ICommand
     /// <param name="canExecute">The predicate for execution allowed.</param>
     public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
     {
-        this.execute = execute;
+        this.execute = Guard.ThrowIfNull(execute);
         this.canExecute = canExecute;
     }
 

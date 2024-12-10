@@ -16,7 +16,6 @@
             <MenuItem Header="_View"></MenuItem>
             <MenuItem Header="_Window"></MenuItem>
             <MenuItem Header="_Help"></MenuItem>
-            <MenuItem Header="{Binding TestText}"></MenuItem>
         </Menu>
     </Grid>
 </UserControl>

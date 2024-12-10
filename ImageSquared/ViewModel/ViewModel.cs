@@ -3,6 +3,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+/// <summary>
+/// The base model for view models.
+/// </summary>
 internal abstract class ViewModel : INotifyPropertyChanged
 {
     /// <inheritdoc/>

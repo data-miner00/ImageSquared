@@ -23,6 +23,10 @@ public partial class HistoryWindow : Window
 {
     private readonly IHistoryRepository repository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HistoryWindow"/> class.
+    /// </summary>
+    /// <param name="repository">The history repository.</param>
     public HistoryWindow(IHistoryRepository repository)
     {
         this.repository = repository;

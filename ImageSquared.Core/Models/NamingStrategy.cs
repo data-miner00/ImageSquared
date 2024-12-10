@@ -1,4 +1,4 @@
-﻿namespace ImageSquared;
+﻿namespace ImageSquared.Core.Models;
 
 public enum NamingStrategy
 {
