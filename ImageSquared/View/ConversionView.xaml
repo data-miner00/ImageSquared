@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ImageSquared.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="900">
+             d:DesignHeight="450" d:DesignWidth="900" d:Background="White">
     <UserControl.Resources>
-       <Style TargetType="Button">
+        <Style TargetType="Button">
             <Setter Property="Background" Value="AntiqueWhite"/>
         </Style>
         <Style TargetType="{x:Type Button}" x:Key="SaveButton">

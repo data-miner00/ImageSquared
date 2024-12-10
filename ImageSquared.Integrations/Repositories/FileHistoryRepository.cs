@@ -47,6 +47,6 @@ public sealed class FileHistoryRepository : IHistoryRepository
         // bug, ReadAllLinesAsync will stuck here
         var lines = File.ReadAllLines(this.historyFilePath);
 
-        return Task.FromResult(lines.AsEnumerable());
+        return Task.FromResult<IEnumerable<string>>(lines);
     }
 }
