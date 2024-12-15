@@ -20,7 +20,7 @@ public sealed class MainWindowViewModel : ViewModel
     /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
     /// </summary>
     /// <param name="selectImageAction">The action to select an image.</param>
-    /// <param name="selectImageAction">The action to convert an image.</param>
+    /// <param name="convertImageAction">The action to convert an image.</param>
     public MainWindowViewModel(Action selectImageAction, Action convertImageAction)
     {
         this.SelectImageCommand = new RelayCommand(_ => selectImageAction());

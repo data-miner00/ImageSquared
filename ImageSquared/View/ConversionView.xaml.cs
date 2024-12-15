@@ -5,6 +5,7 @@ using ImageSquared.Core;
 using ImageSquared.Core.Models;
 using ImageSquared.Core.Repositories;
 using ImageSquared.Option;
+using ImageSquared.Transformers;
 using ImageSquared.ViewModel;
 using Microsoft.Win32;
 using System;
@@ -13,7 +14,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 /// <summary>
@@ -27,9 +27,7 @@ public sealed partial class ConversionView : UserControl
     private readonly IOutputNamingStrategy outputNaming;
     private readonly IDictionary<ImageFormat, BitmapEncoder> encoders;
     private readonly MainWindowViewModel viewModel;
-
-    private readonly int dpiX = 96;
-    private readonly int dpiY = 96;
+    private readonly IImageTransformer transformer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConversionView"/> class.
@@ -44,6 +42,7 @@ public sealed partial class ConversionView : UserControl
         this.outputNaming = context.Resolve<IOutputNamingStrategy>();
         this.encoders = context.Resolve<IDictionary<ImageFormat, BitmapEncoder>>();
         this.viewModel = new MainWindowViewModel(this.BrowseImageFile, this.btnConvert_Click);
+        this.transformer = context.Resolve<IImageTransformer>();
 
         this.DataContext = this.viewModel;
 
@@ -84,37 +83,14 @@ public sealed partial class ConversionView : UserControl
             return;
         }
 
-        var imageOrientation = this.viewModel.ImageOrientation;
-        var standardLength = this.viewModel.StandardizedLength;
-        var currentImageWidth = this.viewModel.CurrentImageWidth;
-        var currentImageHeight = this.viewModel.CurrentImageHeight;
-        var currentImage = this.viewModel.CurrentImage;
-
-        var extendedImage = new RenderTargetBitmap(standardLength, standardLength, this.dpiX, this.dpiY, PixelFormats.Pbgra32);
-
-        var visual = new DrawingVisual();
-
-        using (var drawingContext = visual.RenderOpen())
+        var currentImage = new Image
         {
-            if (imageOrientation == ImageOrientation.Portrait)
-            {
-                var startingPosition = (standardLength / 2) - (currentImageWidth / 2);
-                drawingContext.DrawImage(currentImage, new Rect(startingPosition, 0, currentImageWidth, currentImageHeight));
-            }
-            else if (imageOrientation == ImageOrientation.Landscape)
-            {
-                var startingPosition = (standardLength / 2) - (currentImageHeight / 2);
-                drawingContext.DrawImage(currentImage, new Rect(0, startingPosition, currentImageWidth, currentImageHeight));
-            }
-            else
-            {
-                drawingContext.DrawImage(currentImage, new Rect(0, 0, currentImageWidth, currentImageHeight));
-            }
-        }
+            Source = this.viewModel.CurrentImage,
+        };
 
-        extendedImage.Render(visual);
+        var transformedImage = this.transformer.Transform(currentImage);
 
-        this.viewModel.TransformedBitmapImage = extendedImage;
+        this.viewModel.TransformedBitmapImage = transformedImage.Source as RenderTargetBitmap;
 
         this.btnSave_Click();
     }

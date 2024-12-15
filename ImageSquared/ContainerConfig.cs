@@ -9,6 +9,7 @@ using ImageSquared.Core.Models;
 using ImageSquared.Core.Repositories;
 using ImageSquared.Integrations.Repositories;
 using ImageSquared.Option;
+using ImageSquared.Transformers;
 using ImageSquared.View;
 using ImageSquared.ViewModel;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,7 @@ internal static class ContainerConfig
         builder
             .RegisterSettingsFile()
             .RegisterRepositories()
+            .RegisterTransformers()
             .RegisterOpenFileDialog()
             .RegisterNamingStrategy()
             .RegisterBitmapEncoders()
@@ -147,6 +149,13 @@ internal static class ContainerConfig
         builder.RegisterType<ConversionViewModel>();
         builder.RegisterType<HistoryViewModel>();
         builder.RegisterType<MainViewModel>();
+
+        return builder;
+    }
+
+    private static ContainerBuilder RegisterTransformers(this ContainerBuilder builder)
+    {
+        builder.RegisterType<SquarePaddingImageTransformer>().As<IImageTransformer>();
 
         return builder;
     }
