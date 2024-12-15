@@ -21,6 +21,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <SolidColorBrush x:Key="RandomBrush" Color="#EEE" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -85,7 +86,7 @@
         </Button>
 
         <StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center">
-            <Border BorderThickness="1" BorderBrush="Gray" Margin="10">
+            <Border BorderThickness="1" BorderBrush="Gray" Margin="10" Background="{StaticResource RandomBrush}">
                 <Image x:Name="TransformedImage"
                        Height="350"
                        Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}"
