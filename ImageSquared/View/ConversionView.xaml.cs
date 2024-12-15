@@ -11,21 +11,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 /// <summary>
-/// Interaction logic for ConversionView.xaml
+/// Interaction logic for ConversionView.xaml.
 /// </summary>
 public sealed partial class ConversionView : UserControl
 {
@@ -39,6 +31,9 @@ public sealed partial class ConversionView : UserControl
     private readonly int dpiX = 96;
     private readonly int dpiY = 96;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConversionView"/> class.
+    /// </summary>
     public ConversionView()
     {
         var context = MainWindow.Context;
@@ -48,7 +43,7 @@ public sealed partial class ConversionView : UserControl
         this.historyRepository = context.Resolve<IHistoryRepository>();
         this.outputNaming = context.Resolve<IOutputNamingStrategy>();
         this.encoders = context.Resolve<IDictionary<ImageFormat, BitmapEncoder>>();
-        this.viewModel = new MainWindowViewModel(this.BrowseImageFile);
+        this.viewModel = new MainWindowViewModel(this.BrowseImageFile, this.btnConvert_Click);
 
         this.DataContext = this.viewModel;
 
@@ -82,7 +77,7 @@ public sealed partial class ConversionView : UserControl
         }
     }
 
-    private void btnConvert_Click(object sender, RoutedEventArgs e)
+    private void btnConvert_Click()
     {
         if (this.viewModel.ImageOrientation == ImageOrientation.Squared)
         {
@@ -121,7 +116,7 @@ public sealed partial class ConversionView : UserControl
 
         this.viewModel.TransformedBitmapImage = extendedImage;
 
-        this.btnSave_Click(sender, e);
+        this.btnSave_Click();
     }
 
     private void SaveSelectedFile(string filePath)
@@ -130,7 +125,7 @@ public sealed partial class ConversionView : UserControl
         this.historyRepository.AddAsync(filePath);
     }
 
-    private void btnSave_Click(object sender, RoutedEventArgs e)
+    private void btnSave_Click()
     {
         if (this.viewModel.TransformedBitmapImage is null)
         {

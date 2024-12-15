@@ -20,15 +20,22 @@ public sealed class MainWindowViewModel : ViewModel
     /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
     /// </summary>
     /// <param name="selectImageAction">The action to select an image.</param>
-    public MainWindowViewModel(Action selectImageAction)
+    /// <param name="selectImageAction">The action to convert an image.</param>
+    public MainWindowViewModel(Action selectImageAction, Action convertImageAction)
     {
         this.SelectImageCommand = new RelayCommand(_ => selectImageAction());
+        this.ConvertImageCommand = new RelayCommand(_ => convertImageAction(), (_) => this.currentImage is not null);
     }
 
     /// <summary>
     /// Gets the command to select an image.
     /// </summary>
     public ICommand SelectImageCommand { get; }
+
+    /// <summary>
+    /// Gets the command to convert the image.
+    /// </summary>
+    public ICommand ConvertImageCommand { get; }
 
     /// <summary>
     /// Gets or sets the current image height.
@@ -107,6 +114,7 @@ public sealed class MainWindowViewModel : ViewModel
         {
             this.currentImage = value;
             this.OnPropertyChanged();
+            CommandManager.InvalidateRequerySuggested();
         }
     }
 
