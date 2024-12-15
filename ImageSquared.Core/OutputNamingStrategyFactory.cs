@@ -3,6 +3,9 @@
 using ImageSquared.Core.Models;
 using System;
 
+/// <summary>
+/// The factory for constructing the concrete <see cref="IOutputNamingStrategy"/> class.
+/// </summary>
 public sealed class OutputNamingStrategyFactory
 {
     private readonly string fileExtension;

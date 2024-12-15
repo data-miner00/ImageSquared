@@ -2,12 +2,20 @@
 
 using ImageSquared.Core;
 using ImageSquared.Core.Repositories;
+using ImageSquared.View;
 using System.Collections.ObjectModel;
 
+/// <summary>
+/// The view model for <see cref="HistoryView"/>.
+/// </summary>
 public sealed class HistoryViewModel : ViewModel
 {
     private readonly IHistoryRepository repository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HistoryViewModel"/> class.
+    /// </summary>
+    /// <param name="repository">The history repository.</param>
     public HistoryViewModel(IHistoryRepository repository)
     {
         this.repository = Guard.ThrowIfNull(repository);
