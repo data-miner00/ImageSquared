@@ -27,6 +27,11 @@ public sealed class HistoryViewModel : ViewModel
     /// </summary>
     public ObservableCollection<string> FileHistory { get; } = [];
 
+    /// <summary>
+    /// Gets or sets a value indicating whether to show the history list.
+    /// </summary>
+    public bool ShowHistory { get; set; } = true;
+
     private void LoadHistoryFile()
     {
         var fileNames = this.repository.GetAllAsync().GetAwaiter().GetResult();

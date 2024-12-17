@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ImageSquared.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
-    <Grid>
+    <Grid Visibility="{Binding ShowHistory, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
