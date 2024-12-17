@@ -5,7 +5,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Style/ListViewStyles.xaml"/>
+                <ResourceDictionary Source="Resources/ListViewStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Brushes.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
