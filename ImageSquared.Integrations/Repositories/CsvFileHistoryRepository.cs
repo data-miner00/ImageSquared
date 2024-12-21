@@ -16,7 +16,7 @@ using static System.Globalization.CultureInfo;
 public sealed class CsvFileHistoryRepository : IHistoryRepository<LoadHistoryRecord>
 {
     private readonly string csvFilePath;
-    private List<LoadHistoryRecord> records;
+    private List<LoadHistoryRecord> records = [];
 
     public CsvFileHistoryRepository(string csvFilePath)
     {

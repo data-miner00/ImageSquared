@@ -12,7 +12,15 @@
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions> 
         <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}" />
+            <ListView x:Name="lvRecentImages" SelectionMode="Single" ItemsSource="{Binding FileHistory}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding FileName}" FontWeight="Bold"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </ScrollViewer>
         <TextBox Text="{Binding ElementName=lvRecentImages,Path=SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  Grid.Row="1"></TextBox>

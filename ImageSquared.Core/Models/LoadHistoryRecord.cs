@@ -16,5 +16,5 @@ public class LoadHistoryRecord
 
     public long FileSize { get; set; }
 
-    public string FullPath => $"{this.FilePath}/{this.FileName}.{this.FileExtension}";
+    public string FullPath => $"{this.FilePath}/{this.FileName}";
 }

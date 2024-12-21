@@ -1,6 +1,7 @@
 ﻿namespace ImageSquared.ViewModel;
 
 using ImageSquared.Core;
+using ImageSquared.Core.Models;
 using ImageSquared.Core.Repositories;
 using ImageSquared.View;
 using System.Collections.ObjectModel;
@@ -10,13 +11,13 @@ using System.Collections.ObjectModel;
 /// </summary>
 public sealed class HistoryViewModel : ViewModel
 {
-    private readonly IHistoryRepository<string> repository;
+    private readonly IHistoryRepository<LoadHistoryRecord> repository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HistoryViewModel"/> class.
     /// </summary>
     /// <param name="repository">The history repository.</param>
-    public HistoryViewModel(IHistoryRepository<string> repository)
+    public HistoryViewModel(IHistoryRepository<LoadHistoryRecord> repository)
     {
         this.repository = Guard.ThrowIfNull(repository);
         this.LoadHistoryFile();
@@ -25,7 +26,7 @@ public sealed class HistoryViewModel : ViewModel
     /// <summary>
     /// Gets the observable file history.
     /// </summary>
-    public ObservableCollection<string> FileHistory { get; } = [];
+    public ObservableCollection<LoadHistoryRecord> FileHistory { get; } = [];
 
     /// <summary>
     /// Gets or sets a value indicating whether to show the history list.

@@ -23,7 +23,7 @@ public sealed partial class ConversionView : UserControl
 {
     private readonly DefaultSettings settings;
     private readonly OpenFileDialog openFileDialog;
-    private readonly IHistoryRepository<string> historyRepository;
+    private readonly IHistoryRepository<LoadHistoryRecord> historyRepository;
     private readonly IOutputNamingStrategy outputNaming;
     private readonly IDictionary<ImageFormat, BitmapEncoder> encoders;
     private readonly MainWindowViewModel viewModel;
@@ -38,7 +38,7 @@ public sealed partial class ConversionView : UserControl
 
         this.settings = context.Resolve<DefaultSettings>();
         this.openFileDialog = context.Resolve<OpenFileDialog>();
-        this.historyRepository = context.Resolve<IHistoryRepository<string>>();
+        this.historyRepository = context.Resolve<IHistoryRepository<LoadHistoryRecord>>();
         this.outputNaming = context.Resolve<IOutputNamingStrategy>();
         this.encoders = context.Resolve<IDictionary<ImageFormat, BitmapEncoder>>();
         this.viewModel = new MainWindowViewModel(this.BrowseImageFile, this.btnConvert_Click);
