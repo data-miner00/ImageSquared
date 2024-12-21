@@ -44,7 +44,7 @@ public sealed class CsvFileHistoryRepository : IHistoryRepository<LoadHistoryRec
 
     public Task<IEnumerable<LoadHistoryRecord>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        this.records = Load(this.csvFilePath);
+        this.records.AddRange(Load(this.csvFilePath));
         return Task.FromResult<IEnumerable<LoadHistoryRecord>>(this.records);
     }
 
