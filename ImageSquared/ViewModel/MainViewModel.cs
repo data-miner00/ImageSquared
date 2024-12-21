@@ -2,6 +2,7 @@
 
 using ImageSquared.Core;
 using ImageSquared.View;
+using System.Windows;
 using System.Windows.Input;
 
 /// <summary>
@@ -30,6 +31,11 @@ public sealed class MainViewModel : ViewModel
     /// Gets the select view model command.
     /// </summary>
     public ICommand SelectViewModelCommand { get; }
+
+    /// <summary>
+    /// Gets the command to exit the application.
+    /// </summary>
+    public ICommand ExitApplicationCommand { get; } = new RelayCommand(_ => Application.Current.Shutdown());
 
     /// <summary>
     /// Gets the conversion view model.

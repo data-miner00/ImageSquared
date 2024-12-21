@@ -29,6 +29,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu FontSize="20">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Clear" Command="{Binding ClearSelectedImageCommand}"/>
+                <MenuItem Header="_Exit" Command="{Binding ExitApplicationCommand}"/>
+            </MenuItem>
           <MenuItem Header="_View">
             <MenuItem Header="_Home"
                       Command="{Binding SelectViewModelCommand}"
