@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 /// <summary>
 /// The abstraction for history repository.
 /// </summary>
-public interface IHistoryRepository
+/// <typeparam name="T">The type of history object.</typeparam>
+public interface IHistoryRepository<T>
 {
     /// <summary>
     /// Gets all the existing entries in the history.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The list of entries.</returns>
-    public Task<IEnumerable<string>> GetAllAsync(CancellationToken cancellationToken = default);
+    public Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds an entry into the history for persistence.

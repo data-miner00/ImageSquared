@@ -10,13 +10,13 @@ using System.Collections.ObjectModel;
 /// </summary>
 public sealed class HistoryViewModel : ViewModel
 {
-    private readonly IHistoryRepository repository;
+    private readonly IHistoryRepository<string> repository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HistoryViewModel"/> class.
     /// </summary>
     /// <param name="repository">The history repository.</param>
-    public HistoryViewModel(IHistoryRepository repository)
+    public HistoryViewModel(IHistoryRepository<string> repository)
     {
         this.repository = Guard.ThrowIfNull(repository);
         this.LoadHistoryFile();

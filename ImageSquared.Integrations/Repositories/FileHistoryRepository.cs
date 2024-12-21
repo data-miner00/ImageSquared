@@ -11,7 +11,7 @@ using ImageSquared.Core;
 /// <summary>
 /// The file-based history repository implementation.
 /// </summary>
-public sealed class FileHistoryRepository : IHistoryRepository
+public sealed class FileHistoryRepository : IHistoryRepository<string>
 {
     private readonly string historyFilePath;
 

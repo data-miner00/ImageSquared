@@ -99,7 +99,17 @@ internal static class ContainerConfig
 
                 return new FileHistoryRepository(settings.HistoryFilePath);
             })
-            .As<IHistoryRepository>()
+            .As<IHistoryRepository<string>>()
+            .InstancePerDependency();
+
+        builder
+            .Register(ctx =>
+            {
+                var settings = ctx.Resolve<DefaultSettings>();
+
+                return new CsvFileHistoryRepository(settings.HistoryFilePath);
+            })
+            .As<IHistoryRepository<LoadHistoryRecord>>()
             .InstancePerDependency();
 
         return builder;
