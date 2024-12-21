@@ -110,7 +110,7 @@ internal static class ContainerConfig
                 return new CsvFileHistoryRepository(settings.HistoryFilePath);
             })
             .As<IHistoryRepository<LoadHistoryRecord>>()
-            .InstancePerDependency();
+            .SingleInstance();
 
         return builder;
     }
