@@ -25,10 +25,10 @@
     </Window.Resources>
     <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Menu FontSize="20">
+        <Menu FontSize="16">
             <MenuItem Header="_File">
                 <MenuItem Header="_Clear" Command="{Binding ClearSelectedImageCommand}"/>
                 <MenuItem Header="_Exit" Command="{Binding ExitApplicationCommand}"/>
