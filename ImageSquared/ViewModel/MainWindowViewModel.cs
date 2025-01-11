@@ -21,10 +21,12 @@ public sealed class MainWindowViewModel : ViewModel
     /// </summary>
     /// <param name="selectImageAction">The action to select an image.</param>
     /// <param name="convertImageAction">The action to convert an image.</param>
-    public MainWindowViewModel(Action selectImageAction, Action convertImageAction)
+    /// <param name="resetAction">The action to reset the states.</param>
+    public MainWindowViewModel(Action selectImageAction, Action convertImageAction, Action resetAction)
     {
         this.SelectImageCommand = new RelayCommand(_ => selectImageAction());
         this.ConvertImageCommand = new RelayCommand(_ => convertImageAction(), (_) => this.currentImage is not null);
+        this.ClearSelectedImageCommand = new RelayCommand(_ => resetAction(), (_) => this.currentImage is not null);
     }
 
     /// <summary>
@@ -36,6 +38,11 @@ public sealed class MainWindowViewModel : ViewModel
     /// Gets the command to convert the image.
     /// </summary>
     public ICommand ConvertImageCommand { get; }
+
+    /// <summary>
+    /// Gets the command to clear selected image.
+    /// </summary>
+    public ICommand ClearSelectedImageCommand { get; }
 
     /// <summary>
     /// Gets or sets the current image height.

@@ -41,7 +41,7 @@ public sealed partial class ConversionView : UserControl
         this.historyRepository = context.Resolve<IHistoryRepository<LoadHistoryRecord>>();
         this.outputNaming = context.Resolve<IOutputNamingStrategy>();
         this.encoders = context.Resolve<IDictionary<ImageFormat, BitmapEncoder>>();
-        this.viewModel = new MainWindowViewModel(this.BrowseImageFile, this.btnConvert_Click);
+        this.viewModel = new MainWindowViewModel(this.BrowseImageFile, this.btnConvert_Click, this.Reset);
         this.transformer = context.Resolve<IImageTransformer>();
 
         this.DataContext = this.viewModel;
@@ -56,24 +56,35 @@ public sealed partial class ConversionView : UserControl
 
     private void BrowseImageFile()
     {
-        if (this.openFileDialog.ShowDialog() == true)
+        if (this.openFileDialog.ShowDialog() != true)
         {
-            var originalImage = new BitmapImage(new Uri(this.openFileDialog.FileName));
-            originalImage.Freeze();
-
-            var originalHeight = Convert.ToInt32(originalImage.Height);
-            var originalWidth = Convert.ToInt32(originalImage.Width);
-
-            this.viewModel.CurrentImage = originalImage;
-            this.viewModel.CurrentImageHeight = originalHeight;
-            this.viewModel.CurrentImageWidth = originalWidth;
-
-            this.viewModel.StandardizedLength = this.viewModel.ImageOrientation == ImageOrientation.Landscape
-                ? this.viewModel.CurrentImageWidth
-                : this.viewModel.CurrentImageHeight;
-
-            this.SaveSelectedFile(this.openFileDialog.FileName);
+            return;
         }
+
+        var originalImage = new BitmapImage(new Uri(this.openFileDialog.FileName));
+        originalImage.Freeze();
+
+        var originalHeight = Convert.ToInt32(originalImage.Height);
+        var originalWidth = Convert.ToInt32(originalImage.Width);
+
+        this.viewModel.CurrentImage = originalImage;
+        this.viewModel.CurrentImageHeight = originalHeight;
+        this.viewModel.CurrentImageWidth = originalWidth;
+
+        this.viewModel.StandardizedLength = this.viewModel.ImageOrientation == ImageOrientation.Landscape
+            ? this.viewModel.CurrentImageWidth
+            : this.viewModel.CurrentImageHeight;
+
+        // dont await
+        this.historyRepository.AddAsync(this.openFileDialog.FileName);
+    }
+
+    private void Reset()
+    {
+        this.viewModel.CurrentImage = null;
+        this.viewModel.CurrentImageHeight = 0;
+        this.viewModel.CurrentImageWidth = 0;
+        this.viewModel.StandardizedLength = 0;
     }
 
     private void btnConvert_Click()
@@ -92,17 +103,6 @@ public sealed partial class ConversionView : UserControl
 
         this.viewModel.TransformedBitmapImage = transformedImage.Source as RenderTargetBitmap;
 
-        this.btnSave_Click();
-    }
-
-    private void SaveSelectedFile(string filePath)
-    {
-        // dont await
-        this.historyRepository.AddAsync(filePath);
-    }
-
-    private void btnSave_Click()
-    {
         if (this.viewModel.TransformedBitmapImage is null)
         {
             _ = MessageBox.Show("Please select an image first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -113,9 +113,7 @@ public sealed partial class ConversionView : UserControl
 
         var fullPath = System.IO.Path.Combine(this.settings.StorageFolderPath, randomName);
 
-        this.encoders.TryGetValue(this.settings.OutputSettings.ImageFormat, out var encoder);
-
-        if (encoder is null)
+        if (!this.encoders.TryGetValue(this.settings.OutputSettings.ImageFormat, out var encoder))
         {
             throw new InvalidOperationException("Image format not supported.");
         }
@@ -129,9 +127,14 @@ public sealed partial class ConversionView : UserControl
 
         _ = MessageBox.Show("Successfully converted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
+        OpenImageSafely(fullPath);
+    }
+
+    private static void OpenImageSafely(string imagePath)
+    {
         var startProcessInfo = new ProcessStartInfo
         {
-            FileName = fullPath,
+            FileName = imagePath,
             UseShellExecute = true,
         };
 
