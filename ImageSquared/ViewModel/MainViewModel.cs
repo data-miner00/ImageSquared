@@ -24,7 +24,7 @@ public sealed class MainViewModel : ViewModel
         this.SelectViewModelCommand = new RelayCommand(this.SelectViewModel);
 
         // Initialize to conversion view when loaded.
-        this.SelectedViewModel = conversionViewModel;
+        this.selectedViewModel = conversionViewModel;
     }
 
     /// <summary>

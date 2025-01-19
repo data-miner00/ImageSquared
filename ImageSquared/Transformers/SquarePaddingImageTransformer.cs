@@ -30,12 +30,12 @@ internal sealed class SquarePaddingImageTransformer : IImageTransformer
         {
             if (imageOrientation == ImageOrientation.Portrait)
             {
-                var startingPosition = standardLength / 2 - originalWidth / 2;
+                var startingPosition = (standardLength / 2) - (originalWidth / 2);
                 drawingContext.DrawImage(image.Source, new Rect(startingPosition, 0, originalWidth, originalHeight));
             }
             else if (imageOrientation == ImageOrientation.Landscape)
             {
-                var startingPosition = standardLength / 2 - originalHeight / 2;
+                var startingPosition = (standardLength / 2) - (originalHeight / 2);
                 drawingContext.DrawImage(image.Source, new Rect(0, startingPosition, originalWidth, originalHeight));
             }
             else

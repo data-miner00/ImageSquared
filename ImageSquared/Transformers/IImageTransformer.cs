@@ -5,7 +5,7 @@ using System.Windows.Controls;
 /// <summary>
 /// The image transformer abstraction.
 /// </summary>
-internal interface IImageTransformer
+public interface IImageTransformer
 {
     /// <summary>
     /// Transforms an image to its desired outcome.
